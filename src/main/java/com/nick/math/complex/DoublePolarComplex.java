@@ -10,9 +10,9 @@ import static com.nick.math.complex.ComplexNumbers.ZERO_COMPLEX_POLAR;
  *   <li> {@code theta} = argument
  </ul>
  * 
- * @author Nicolas Scalese
  * @see Complex
  * @see AbstractDoubleComplex
+ * @author Nicolas Scalese
  */
 class DoublePolarComplex extends AbstractDoubleComplex implements Cloneable {
     
@@ -22,7 +22,7 @@ class DoublePolarComplex extends AbstractDoubleComplex implements Cloneable {
 
     public DoublePolarComplex(double modulus, double argument) {
         if (modulus < 0) {
-            throw new IllegalArgumentException("Modulus must be positive or equal to 0");
+            throw new IllegalArgumentException("Modulus must be positive or equal to 0.");
         }
         if (modulus == 0) {
             this.modulus = 0;
@@ -38,6 +38,16 @@ class DoublePolarComplex extends AbstractDoubleComplex implements Cloneable {
         } else {
             // positive or null value: between 0 (included) and 2*PI (excluded)
             this.argument = argument;
+        }
+    }
+    
+    public DoublePolarComplex(double real) {
+        if (real >= 0) {
+            this.modulus = real;
+            this.argument = 0;
+        } else {
+            this.modulus = -real;
+            this.argument = Math.PI;
         }
     }
     
@@ -137,7 +147,7 @@ class DoublePolarComplex extends AbstractDoubleComplex implements Cloneable {
     @Override
     public Complex multiplyBy(Complex complex) {
         if (this.isZero() || complex.isZero()) {
-            return new DoublePolarComplex(0, 0); 
+            return ZERO_COMPLEX_POLAR; 
         }
         if (this.isOne()) {
             return complex;

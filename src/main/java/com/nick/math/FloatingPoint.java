@@ -52,8 +52,8 @@ public class FloatingPoint {
      */
     public static final double FLOAT_EPS = Math.pow(2, - (Float.PRECISION));
     
-    public static IllegalArgumentException NAN_ARGUMENT = 
-            new IllegalArgumentException("NaN argument not allowed for numbers");
+    public static IllegalArgumentException NAN_OR_INFINITY_ARGUMENT = 
+            new IllegalArgumentException("NaN or infinity numbers not allowed.");
     
     
     private FloatingPoint() {}

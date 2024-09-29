@@ -7,10 +7,10 @@ import java.util.Objects;
  * Common (partial) implementation for cartesian form and polar form 
  * of a {@link Complex} number.
  * 
- * @author Nicolas Scalese
  * @see Complex
  * @see DoubleComplex
  * @see DoublePolarComplex
+ * @author Nicolas Scalese
  */
 abstract class AbstractDoubleComplex implements Complex, Cloneable {
     
@@ -62,6 +62,13 @@ abstract class AbstractDoubleComplex implements Complex, Cloneable {
     
     @Override
     public Complex nThRoot(int rootIndex, int k) {
+        if (rootIndex <= 0) {
+            throw new IllegalArgumentException();
+        }
+        if ((k < 0) || (k >= rootIndex)) {
+            throw new ArithmeticException();
+        }
+        
         double modulus = Math.pow(this.modulusValue(), 1. / rootIndex);
         double angulus = (this.mainArgumentValue() + (2 * k * Math.PI)) / rootIndex;
         return new DoublePolarComplex(modulus, angulus);
@@ -84,7 +91,7 @@ abstract class AbstractDoubleComplex implements Complex, Cloneable {
         //  -3 + 5i
         //  +3 - 5i
         StringBuilder sb = new StringBuilder();
-        return sb.append(signumOf(this.realValue())).append(' ')
+        return sb.append(signumOf(this.realValue()))
                 .append(Math.abs(this.realValue()))
                 .append(' ')
                 .append(signumOf(this.imaginaryValue())).append(' ')
@@ -98,12 +105,19 @@ abstract class AbstractDoubleComplex implements Complex, Cloneable {
         String imaginaryAbsString = df.format(Math.abs(this.imaginaryValue()));
         
         StringBuilder sb = new StringBuilder();
-        return sb.append(signumOf(this.realValue())).append(' ')
+        return sb.append(signumOf(this.realValue()))
                 .append(realAbsString)
                 .append(' ')
                 .append(signumOf(this.imaginaryValue())).append(' ')
                 .append(imaginaryAbsString).append('i')
                 .toString();
+    }
+    
+    private char signumOf(double d) {
+        if (d >= 0) {
+            return '+';
+        }
+        return '-';
     }
     
     @Override
@@ -127,13 +141,6 @@ abstract class AbstractDoubleComplex implements Complex, Cloneable {
                 .append(", ")
                 .append(imaginaryString).append(')')
                 .toString();
-    }
-    
-    private char signumOf(double d) {
-        if (d >= 0) {
-            return '+';
-        }
-        return '-';
     }
 
     @Override
@@ -210,16 +217,16 @@ abstract class AbstractDoubleComplex implements Complex, Cloneable {
         if (this == o) {
             return true;
         }
-        if (o == null) {
+        if (o == null || !(o instanceof Complex)) {
             return false;
         }
-        if (o instanceof AbstractDoubleComplex complex) {
-            return ((this.realValue() == complex.realValue()) && 
-                    (this.imaginaryValue() == complex.imaginaryValue())) 
-                    || ((this.modulusValue() == complex.modulusValue()) && 
-                            (this.mainArgumentValue() == complex.mainArgumentValue()));
-        }
-        return false;
+        
+        Complex complex = (Complex) o;
+        return ((this.realValue() == complex.realValue()) && 
+                (this.imaginaryValue() == complex.imaginaryValue())) 
+                    || 
+                ((this.modulusValue() == complex.modulusValue()) && 
+                (this.mainArgumentValue() == complex.mainArgumentValue()));
     }
     
     @Override

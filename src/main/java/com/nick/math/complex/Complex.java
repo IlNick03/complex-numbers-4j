@@ -24,7 +24,14 @@ import java.text.DecimalFormat;
  *     </ul>
  *   </li>
  * </ul>
+ * <p>
  * @apiNote
+ * This API is fluent, allowing chained operations:
+ * <p>
+ * {@code Complex result = c1.plus(c2).minusReal(Math.PI).divideBy(c3.multiplyByImaginary(3)).sqrt(0);}
+ * {@code // sqrt( (c1 + c2 - PI)/(c3*(0+3i)) )}
+ * <p>
+ * <p>
  * Some notes about the implementation:
  * <ul>
  *   <li> There are 2 different implementations of {@code Complex}, defined in Cartesian and polar/exponential form.</li>
@@ -40,7 +47,7 @@ import java.text.DecimalFormat;
  *       <li> Addition {@link #plus(Complex)} and subtraction {@link #minus(Complex)} are
  *            always computed using Cartesian form, calling methods {@link #realValue()} 
  *            and {@link #imaginaryValue()} in every case.</li>
- *       <li> Multiplication {@link #multiplyBy(Complex)} and division {@link #divideBy(Complex)} 
+ *       <li> Multiplication {@link #multiplyBy(Complex)} and division {@link #divideFor(Complex)} 
  *            are implemented differently. In case we multiply/divide different {@code Complex} 
  *            number types, the first of the two operands "decides" how the operation is made.</li>
  *       <li> Exponentiation {@link #pow(double)} and roots {@link #nThRoot(int, int)}, {@link #allNThRoots(int)}
@@ -63,10 +70,12 @@ import java.text.DecimalFormat;
  *       <li> {@link #conjugate()}, {@link #negative()}, {@link #reciprocal()}</li>
  *       <li> {@link #hasRealOnly()}, {@link #hasImaginaryOnly()}, {@link #hasNullArgument()}</li>
  *       <li> {@link #isZero()}, {@link #isOne()}</li>
- *       <li> {@link #equals()}</li>
+ *       <li> {@link #equals(java.lang.Object)}</li>
  *     </ul>
  * </ul>
+ * <p>
  * 
+ * @see ComplexNumbers
  * @author Nicolas Scalese
  */
 public interface Complex {
@@ -162,20 +171,34 @@ public interface Complex {
     
     /**
      * Checks if this complex number has only a real part (imaginary part is zero).
-     *
+     * 
      * @return {@code true} if this complex number has only a real part, {@code false} otherwise
      */
     boolean hasRealOnly();
     
+    /**
+     * Checks if this complex number has only a real part (imaginary part is zero), 
+     * within the tolerance of the specified epsilon value.
+     * 
+     * @param eps the tolerance for checking if the imaginary part is effectively zero
+     * @return {@code true} if this complex number has only a real part, {@code false} otherwise
+     */
     boolean hasRealOnly(double eps);
     
     /**
      * Checks if this complex number has only an imaginary part (real part is zero).
-     *
+     * 
      * @return {@code true} if this complex number has only an imaginary part, {@code false} otherwise
      */
     boolean hasImaginaryOnly();
     
+    /**
+     * Checks if this complex number has only an imaginary part (real part is zero),
+     * within the tolerance of the specified epsilon value.
+     * 
+     * @param eps the tolerance for checking if the real part is effectively zero
+     * @return {@code true} if this complex number has only an imaginary part, {@code false} otherwise
+     */
     boolean hasImaginaryOnly(double eps);
     
     /**
@@ -185,32 +208,65 @@ public interface Complex {
      */
     boolean hasNullArgument();
     
+    /**
+     * Checks if this complex number has a null argument (main argument is zero),
+     * within the tolerance of the specified epsilon value.
+     * 
+     * @param eps the tolerance for checking if the argument is effectively zero
+     * @return {@code true} if the argument of this complex number is zero, {@code false} otherwise
+     */
     boolean hasNullArgument(double eps);
     
     // -------------------------------------------------------------------------
     
     /**
      * Adds this complex number to another complex number.
-     *
-     * @param complex the complex number to be added to this complex number
+     * This operation is performed in Cartesian form.
+     * 
+     * @param complex the complex number to be added
      * @return the sum of this complex number and the specified complex number
      */
     Complex plus(Complex complex);
   
+    /**
+     * Adds an amount to the real part of this complex number.
+     * 
+     * @param amount the amount to add to the real part
+     * @return a new {@code Complex} representing the sum of this complex number and the real part
+     */
     Complex plusReal(double amount);
     
+    /**
+     * Adds an amount to the imaginary part of this complex number.
+     * 
+     * @param amount the amount to add to the imaginary part
+     * @return a new {@code Complex} representing the sum of this complex number and the imaginary part
+     */
     Complex plusImaginary(double amount);
     
     /**
      * Subtracts another complex number from this complex number.
+     * This operation is performed in Cartesian form.
      *
      * @param complex the complex number to be subtracted from this complex number
      * @return the difference between this complex number and the specified complex number
      */
     Complex minus(Complex complex);
     
+    /**
+     * Subtracts an amount from the real part of this complex number.
+     * 
+     * @param amount the amount to subtract from the real part
+     * @return a new {@code Complex} representing the difference between this complex number and the real part
+     */
     Complex minusReal(double amount);
     
+    /**
+     * Subtracts an amount from the imaginary part of this complex number.
+     * 
+     * @param amount the amount to subtract from the imaginary part
+     * @return a new {@code Complex} representing the difference between this complex number and the imaginary part
+     */
     Complex minusImaginary(double amount);
     
     /**
@@ -221,8 +277,20 @@ public interface Complex {
      */
     Complex multiplyBy(Complex complex);
     
+    /**
+     * Multiplies the real part of this complex number by an amount.
+     * 
+     * @param amount the amount to multiply the real part by
+     * @return a new {@code Complex} representing the result of the multiplication
+     */
     Complex multiplyByReal(double amount);
     
+    /**
+     * Multiplies the imaginary part of this complex number by an amount.
+     * 
+     * @param amount the amount to multiply the imaginary part by
+     * @return a new {@code Complex} representing the result of the multiplication
+     */
     Complex multiplyByImaginary(double amount);
     
     /**
@@ -235,14 +303,29 @@ public interface Complex {
      */
     Complex divideFor(Complex complex);
     
+    /**
+     * Divides the real part of this complex number by an amount.
+     * 
+     * @param amount the amount to divide the real part by
+     * @return a new {@code Complex} representing the result of the division
+     * @throws ArithmeticException if {@code amount} is zero
+     */
     Complex divideForReal(double amount);
     
+    /**
+     * Divides the imaginary part of this complex number by an amount.
+     * 
+     * @param amount the amount to divide the imaginary part by
+     * @return a new {@code Complex} representing the result of the division
+     * @throws ArithmeticException if {@code amount} is zero
+     */
     Complex divideForImaginary(double amount);
     
     /**
-     * Returns the reciprocal of this complex number.
-     *
+     * Returns the reciprocal (multiplicative inverse) of this complex number.
+     * 
      * @return the reciprocal of this complex number
+     * @throws ArithmeticException if this complex number is {@code Complex} zero ({@code 0 + 0i})
      */
     Complex reciprocal();
     
@@ -250,26 +333,82 @@ public interface Complex {
     
     /**
      * Raises this complex number to the power of the specified exponent.
-     *
+     * This operation is performed in Polar form.
+     * 
      * @param exponent the exponent to raise this complex number to
      * @return this complex number raised to the specified power
      */
     Complex pow(double exponent);
     
     /**
-     * Computes the specified n-th root of this complex number.
+     * Computes the square root of this complex number, selecting a specific root 
+     * based on the value of {@code k}.
+     * This operation is performed in Polar form.
      *
-     * @param n the degree of the root
-     * @param k the specific root to be computed (0 <= k < n)
-     * @return the k-th n-th root of this complex number
+     * @param k the specific root to compute (0 <= k < 2)
+     * @return the k-th square root of this complex number as a new {@code Complex}
+     * @throws ArithmeticException if {@code k} is out of bounds (not in [0, 2))
+     * @see #nThRoot(int, int)
+     */
+    default Complex sqrt(int k) {
+        return this.nThRoot(2, k);
+    }
+    
+    /**
+     * Computes all square roots of this complex number.
+     * This operation is performed in Polar form.
+     *
+     * @return an array of {@code Complex} numbers representing all square roots of this complex number
+     * @see #allNThRoots(int)
+     */
+    default Complex[] allSqrts() {
+        return this.allNThRoots(2);
+    }
+    
+    /**
+     * Computes the cube root of this complex number, selecting a specific root 
+     * based on the value of {@code k}.
+     * This operation is performed in polar form.
+     *
+     * @param k the specific root to compute (0 <= k < 3)
+     * @return the k-th cube root of this complex number as a new {@code Complex}
+     * @throws ArithmeticException if {@code k} is out of bounds (not in [0, 3))
+     * @see #nThRoot(int, int)
+     */
+    default Complex cbrt(int k) {
+        return this.nThRoot(3, k);
+    }
+    
+    /**
+     * Computes all cube roots of this complex number.
+     * This operation is performed in polar form.
+     *
+     * @return an array of {@code Complex} numbers representing all cube roots of this complex number
+     * @see #allNThRoots(int)
+     */
+    default Complex[] allCbcrts() {
+        return this.allNThRoots(3);
+    }
+    
+    /**
+     * Computes the specified n-th root of this complex number.
+     * This operation is performed in Polar form.
+     * 
+     * @param n the degree of the root (must be greater than 0)
+     * @param k the specific root to compute (0 <= k < n)
+     * @return the k-th n-th root of this complex number as a new {@code Complex}
+     * @throws IllegalArgumentException if {@code n} is less than or equal to 0
+     * @throws ArithmeticException if {@code k} is out of bounds (not in [0, n))
      */
     Complex nThRoot(int n, int k);
     
     /**
      * Computes all n-th roots of this complex number.
-     *
-     * @param n the degree of the roots to be computed
-     * @return an array containing all n-th roots of this complex number
+     * This operation is performed in Polar form.
+     * 
+     * @param n the degree of the root (must be greater than 0)
+     * @return an array of {@code Complex} numbers representing all n-th roots of this complex number
+     * @throws IllegalArgumentException if {@code n} is less than or equal to 0
      */
     Complex[] allNThRoots(int n);
     
@@ -292,10 +431,31 @@ public interface Complex {
      */
     String cartesianForm();
     
+    /**
+     * Returns a string representation of this complex number in Cartesian form
+     * formatted with the specified {@code DecimalFormat}.
+     *
+     * @param df the {@code DecimalFormat} object to format the real and imaginary parts
+     * @return a formatted string representation of this complex number in Cartesian form
+     */
     String cartesianForm(DecimalFormat df);
     
+    /**
+     * Returns the Cartesian coordinates of this complex number as a string
+     * in the form: {@code (a, b)} where {@code a} is the real part and {@code b} is the imaginary part.
+     *
+     * @return a string representation of the Cartesian coordinates of this complex number
+     */
     String cartesianCoordinates();
     
+    /**
+     * Returns the Cartesian coordinates of this complex number as a string
+     * in the form: {@code (a, b)} where {@code a} is the real part and {@code b} is the imaginary part,
+     * formatted with the specified {@code DecimalFormat}.
+     *
+     * @param df the {@code DecimalFormat} object to format the real and imaginary parts
+     * @return a formatted string representation of the Cartesian coordinates of this complex number
+     */
     String cartesianCoordinates(DecimalFormat df);
     
     /**
@@ -305,10 +465,31 @@ public interface Complex {
      */
     String polarForm();
     
+    /**
+     * Returns a string representation of this complex number in polar form
+     * formatted with the specified {@code DecimalFormat}.
+     *
+     * @param df the {@code DecimalFormat} object to format the modulus and argument
+     * @return a formatted string representation of this complex number in polar form
+     */
     String polarForm(DecimalFormat df);
     
+    /**
+     * Returns the polar coordinates of this complex number as a string
+     * in the form: {@code (r, θ)} where {@code r} is the modulus and {@code θ} is the argument.
+     *
+     * @return a string representation of the polar coordinates of this complex number
+     */
     String polarCoordinates();
     
+    /**
+     * Returns the polar coordinates of this complex number as a string
+     * in the form: {@code (r, θ)} where {@code r} is the modulus and {@code θ} is the argument,
+     * formatted with the specified {@code DecimalFormat}.
+     *
+     * @param df the {@code DecimalFormat} object to format the modulus and argument
+     * @return a formatted string representation of the polar coordinates of this complex number
+     */
     String polarCoordinates(DecimalFormat df);
     
     /**
@@ -318,34 +499,55 @@ public interface Complex {
      */
     String eulerianForm();
     
+    /**
+     * Returns a string representation of this complex number in exponential (Eulerian) form
+     * formatted with the specified {@code DecimalFormat}.
+     *
+     * @param df the {@code DecimalFormat} object to format the modulus and argument
+     * @return a formatted string representation of this complex number in exponential form
+     */
     String eulerianForm(DecimalFormat df);
     
     // -------------------------------------------------------------------------
     
     /**
-     * Checks if this complex number is equal to another object, 
-     * within the tolerance of:  {@code 4 *} {@link com.nick.math.FloatingPoint#DOUBLE_EPS}
+     * Compares this complex number to the specified object.
+     * Returns {@code true} if the specified object is a complex number with 
+     * the same real and imaginary parts (or same modulus and main argument) 
+     * as this complex number, within a tolerance of {@code 4 *} {@link com.nick.math.FloatingPoint#DOUBLE_EPS}.
      *
      * @param complex the object to compare with this complex number
-     * @return {@code true} if the specified object is a complex number equal to this complex number, {@code false} otherwise
-     * @see com.nick.math.FloatingPoint#approxEqual(double, double) 
+     * @return {@code true} if the specified object is a complex number equal to this one, {@code false} otherwise
+     * @see com.nick.math.FloatingPoint#approxEqual(double, double)
      */
     @Override
     boolean equals(Object complex);
     
     /**
-     * Checks if this complex number is equal to another complex number within a given tolerance.
+     * Compares this complex number to another complex number within the specified tolerance.
+     * Returns {@code true} if the real and imaginary parts (or modulus and main argument) 
+     * of the two complex numbers are approximately equal, within the given tolerance {@code epsilon}.
      *
      * @param complex the complex number to compare with this complex number
      * @param epsilon the tolerance for comparing the two complex numbers
-     * @return {@code true} if the specified complex number is equal to this complex number within the given tolerance, {@code false} otherwise
-     * @see com.nick.math.FloatingPoint#approxEqual(double, double, double) 
+     * @return {@code true} if the specified complex number is approximately equal to this one, {@code false} otherwise
+     * @see com.nick.math.FloatingPoint#approxEqual(double, double, double)
      */
     boolean equals(Complex complex, double epsilon);
     
+    /**
+     * Returns the hash code value for this complex number.
+     * The hash code is computed based on the real and imaginary parts of this number.
+     *
+     * @return the hash code value for this complex number
+     */
     @Override
     int hashCode();
     
+    /**
+     * Creates and returns a copy (clone) of this complex number.
+     *
+     * @return a clone of this complex number
+     */
     public Object clone();
-    
 }

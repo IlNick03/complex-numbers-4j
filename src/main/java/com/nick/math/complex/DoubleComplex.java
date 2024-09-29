@@ -10,9 +10,9 @@ import static com.nick.math.complex.ComplexNumbers.ZERO_COMPLEX_CARTESIAN;
  *   <li> {@code a} = imaginary part
  * </ul>
  * 
- * @author Nicolas Scalese
  * @see Complex
  * @see AbstractDoubleComplex
+ * @author Nicolas Scalese
  */
 class DoubleComplex extends AbstractDoubleComplex implements Cloneable {
     
@@ -179,8 +179,10 @@ class DoubleComplex extends AbstractDoubleComplex implements Cloneable {
             return this;
         }
         
+        // (a + bi)*(c + 0i) = ac + (bc)*i
         double real = this.real * amount;
-        return new DoubleComplex(real, this.imaginary);
+        double imaginary = this.imaginary * amount;
+        return new DoubleComplex(real, imaginary);
     }
 
     @Override
@@ -190,8 +192,10 @@ class DoubleComplex extends AbstractDoubleComplex implements Cloneable {
             return ZERO_COMPLEX_CARTESIAN;
         }
         
-        double imaginary = this.imaginary * amount;
-        return new DoubleComplex(this.real, imaginary);
+        // (a + bi)*(0 + di) = -bd + (ad)*i
+        double real = - (this.imaginary * amount);
+        double imaginary = this.real * amount;
+        return new DoubleComplex(real, imaginary);
     }
     
     // -------------------------------------------------------------------------
@@ -229,7 +233,7 @@ class DoubleComplex extends AbstractDoubleComplex implements Cloneable {
     
     @Override
     public Complex divideForReal(double amount) {
-        if (this.isZero() || (amount == 0)) {
+        if (amount == 0) {
             throw new ArithmeticException("Unable to divide by:  0 + 0i");
         }
         if (this.isZero()) {
@@ -244,7 +248,7 @@ class DoubleComplex extends AbstractDoubleComplex implements Cloneable {
 
     @Override
     public Complex divideForImaginary(double amount) {
-        if (this.isZero() || (amount == 0)) {
+        if (amount == 0) {
             throw new ArithmeticException("Unable to divide by:  0 + 0i");
         }
         if (this.isZero()) {
