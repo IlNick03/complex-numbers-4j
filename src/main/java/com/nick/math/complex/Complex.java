@@ -47,7 +47,7 @@ import java.text.DecimalFormat;
  *       <li> Addition {@link #plus(Complex)} and subtraction {@link #minus(Complex)} are
  *            always computed using Cartesian form, calling methods {@link #realValue()} 
  *            and {@link #imaginaryValue()} in every case.</li>
- *       <li> Multiplication {@link #multiplyBy(Complex)} and division {@link #divideFor(Complex)} 
+ *       <li> Multiplication {@link #multiplyBy(Complex)} and division {@link #divideBy(Complex)} 
  *            are implemented differently. In case we multiply/divide different {@code Complex} 
  *            number types, the first of the two operands "decides" how the operation is made.</li>
  *       <li> Exponentiation {@link #pow(double)} and roots {@link #nThRoot(int, int)}, {@link #allNThRoots(int)}
@@ -78,7 +78,7 @@ import java.text.DecimalFormat;
  * @see ComplexNumbers
  * @author Nicolas Scalese
  */
-public interface Complex {
+public interface Complex extends Cloneable {
     
     /**
      * Returns the real part of this complex number.
@@ -301,7 +301,7 @@ public interface Complex {
      * @throws ArithmeticException if the divisor is {@code Complex} zero ({@code 0 + 0i})
      * @see #isZero()
      */
-    Complex divideFor(Complex complex);
+    Complex divideBy(Complex complex);
     
     /**
      * Divides the real part of this complex number by an amount.
@@ -310,7 +310,7 @@ public interface Complex {
      * @return a new {@code Complex} representing the result of the division
      * @throws ArithmeticException if {@code amount} is zero
      */
-    Complex divideForReal(double amount);
+    Complex divideByReal(double amount);
     
     /**
      * Divides the imaginary part of this complex number by an amount.
@@ -319,7 +319,7 @@ public interface Complex {
      * @return a new {@code Complex} representing the result of the division
      * @throws ArithmeticException if {@code amount} is zero
      */
-    Complex divideForImaginary(double amount);
+    Complex divideByImaginary(double amount);
     
     /**
      * Returns the reciprocal (multiplicative inverse) of this complex number.

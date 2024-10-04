@@ -14,7 +14,7 @@ import static com.nick.math.complex.ComplexNumbers.ZERO_COMPLEX_POLAR;
  * @see AbstractDoubleComplex
  * @author Nicolas Scalese
  */
-class DoublePolarComplex extends AbstractDoubleComplex implements Cloneable {
+class DoublePolarComplex extends AbstractDoubleComplex {
     
     private final double modulus;
     private final double argument;
@@ -203,7 +203,7 @@ class DoublePolarComplex extends AbstractDoubleComplex implements Cloneable {
     }
 
     @Override
-    public Complex divideFor(Complex complex) {
+    public Complex divideBy(Complex complex) {
         if (complex.isZero()) {
             throw new ArithmeticException("Unable to divide by:  0 + 0i");
         }
@@ -218,7 +218,7 @@ class DoublePolarComplex extends AbstractDoubleComplex implements Cloneable {
     }
 
     @Override
-    public Complex divideForReal(double amount) {
+    public Complex divideByReal(double amount) {
         if (amount == 0) {
             throw new ArithmeticException("Unable to divide by:  0 + 0i");
         }
@@ -238,7 +238,7 @@ class DoublePolarComplex extends AbstractDoubleComplex implements Cloneable {
     }
 
     @Override
-    public Complex divideForImaginary(double amount) {
+    public Complex divideByImaginary(double amount) {
         if (amount == 0) {
             throw new ArithmeticException("Unable to divide by:  0 + 0i");
         }

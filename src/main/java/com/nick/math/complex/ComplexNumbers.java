@@ -41,7 +41,16 @@ public class ComplexNumbers {
      * multiplicative identity in polar form.
      */
     public static final Complex ONE_COMPLEX_POLAR = new DoublePolarComplex(1, 0);
-    
+
+    /**
+     * The Complex value: {@code z = 0 + 1i} , which is the complex unit.
+     */
+    public static final Complex IMAGINARY_UNIT = new DoubleComplex(0, 1);
+
+    /**
+     * The Complex value: {@code z = 0 + 1i} , which is the complex unit, negated.
+     */
+    public static final Complex IMAGINARY_UNIT_NEGATIVE = new DoubleComplex(0, -1);
     
     public static final int POSITIVE_COMPLEX_SQRT = 0;
     public static final int NEGATIVE_COMPLEX_SQRT = 1;
@@ -49,7 +58,10 @@ public class ComplexNumbers {
     
     private ComplexNumbers() {}
     
-    // -------------------------------------------------------------------------
+
+    // ---------------------------------------------------------------------- //
+    //  Static factory methods
+    // ---------------------------------------------------------------------- //
     
     /**
      * Creates a complex number from a real number, represented as {@code r + 0i}.
@@ -125,7 +137,10 @@ public class ComplexNumbers {
         }
     }
     
-    // -------------------------------------------------------------------------
+
+    // ---------------------------------------------------------------------- //
+    //  Other static methods
+    // ---------------------------------------------------------------------- //
     
     public static boolean isZero(Complex complex) {
         return Objects.equals(complex, ZERO_COMPLEX_CARTESIAN) || 
@@ -289,7 +304,6 @@ public class ComplexNumbers {
             throw new IllegalArgumentException("k value must be in range: 0 (included) - 2 (excluded)");
         } 
         
-        Complex[] roots = new Complex[2]; 
         double sqrt = Math.sqrt(Math.abs(real));
         if (k == NEGATIVE_COMPLEX_SQRT) {
             sqrt = - sqrt;
@@ -312,7 +326,7 @@ public class ComplexNumbers {
         
         if (FloatingPoint.approxZero(real)) {
             roots[0] = ZERO_COMPLEX_CARTESIAN;
-            roots[1] = ZERO_COMPLEX_POLAR;
+            roots[1] = roots[0];
         } else if (real < 0) {
             // sqrt(-9) = +3i , -3i
             roots[0] = new DoubleComplex(0, sqrtAbs);
@@ -359,7 +373,7 @@ public class ComplexNumbers {
             throw new IllegalArgumentException("Coeff of x^1 is zero.");
         }
         // a*x + b = 0  -> x = (-b)/a
-        return b.negative().divideFor(a);
+        return b.negative().divideBy(a);
     }
     
     
@@ -439,7 +453,7 @@ public class ComplexNumbers {
     
     private static Complex[] findRoots(Complex a, Complex c) {
         // a(x^2) + c = 0  -> x1 = x2 = +- sqrt(-c/a)
-        Complex x1 = c.negative().divideFor(a).sqrt(POSITIVE_COMPLEX_SQRT);
+        Complex x1 = c.negative().divideBy(a).sqrt(POSITIVE_COMPLEX_SQRT);
 //        Complex x2 = c.negative().divideFor(a).sqrt(NEGATIVE_COMPLEX_SQRT);
         Complex x2 = x1.negative();
         return new Complex[] {x1, x2};
@@ -451,7 +465,7 @@ public class ComplexNumbers {
         if (sqrtOfDelta.isZero()) {
             // If delta is zero, we have 2 equal roots.
             // x1 = x2 = -b /(2*a)
-            x1 = b.negative().divideFor(a.multiplyByReal(2));
+            x1 = b.negative().divideBy(a.multiplyByReal(2));
             x2 = x1;
             return new Complex[] {x1, x2};
         }
@@ -459,15 +473,15 @@ public class ComplexNumbers {
         Complex signB = new DoubleComplex(Math.signum(b.realValue()), Math.signum(b.imaginaryValue())); 
         Complex expression = b.negative().minus(sqrtOfDelta.multiplyBy(signB));    // -b - sgn(b)*sqrt(delta)
         // x1 = (-b - sgn(b)*sqrt(delta)) /(2*a)  -> Alternative formula: avoid numeric canceling
-        x1 = expression.divideFor(a.multiplyByReal(2));
+        x1 = expression.divideBy(a.multiplyByReal(2));
         
         if (ComplexNumbers.isZero(expression)) {
             // If x1 is zero, we cannot use the alternative formula: dividing by zero is not allowed.
             // x2 = (-b - sqrt(delta)) /(2*a)  -> Traditional formula
-            x2 = b.negative().minus(sqrtOfDelta).divideFor(a.multiplyByReal(2));
+            x2 = b.negative().minus(sqrtOfDelta).divideBy(a.multiplyByReal(2));
         } else {
             // x2 = c / (a * x1)  -> Alternative formula: avoid numeric canceling
-            x2 = c.divideFor(x1.multiplyBy(a));
+            x2 = c.divideBy(x1.multiplyBy(a));
         }
         return new Complex[] {x1, x2};
     }

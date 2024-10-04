@@ -14,7 +14,7 @@ import static com.nick.math.complex.ComplexNumbers.ZERO_COMPLEX_CARTESIAN;
  * @see AbstractDoubleComplex
  * @author Nicolas Scalese
  */
-class DoubleComplex extends AbstractDoubleComplex implements Cloneable {
+class DoubleComplex extends AbstractDoubleComplex {
     
     private final double real;
     private final double imaginary;
@@ -193,14 +193,14 @@ class DoubleComplex extends AbstractDoubleComplex implements Cloneable {
         }
         
         // (a + bi)*(0 + di) = -bd + (ad)*i
-        double real = - (this.imaginary * amount);
+        double real = - this.imaginary * amount;
         double imaginary = this.real * amount;
         return new DoubleComplex(real, imaginary);
     }
     
     // -------------------------------------------------------------------------
     
-    private Complex divideFor(double otherReal, double otherImaginary) {
+    private Complex divideBy(double otherReal, double otherImaginary) {
         if ((otherReal == 0) && (otherImaginary == 0)) {
             throw new ArithmeticException("Unable to divide by:  0 + 0i");
         }
@@ -217,7 +217,7 @@ class DoubleComplex extends AbstractDoubleComplex implements Cloneable {
     }
     
     @Override
-    public Complex divideFor(Complex complex) {
+    public Complex divideBy(Complex complex) {
         if (complex.isZero()) {
             throw new ArithmeticException("Unable to divide by:  0 + 0i");
         }
@@ -228,11 +228,11 @@ class DoubleComplex extends AbstractDoubleComplex implements Cloneable {
             return this;
         }
         
-        return this.divideFor(complex.realValue(), complex.imaginaryValue());
+        return this.divideBy(complex.realValue(), complex.imaginaryValue());
     }
     
     @Override
-    public Complex divideForReal(double amount) {
+    public Complex divideByReal(double amount) {
         if (amount == 0) {
             throw new ArithmeticException("Unable to divide by:  0 + 0i");
         }
@@ -242,12 +242,15 @@ class DoubleComplex extends AbstractDoubleComplex implements Cloneable {
         if (amount == 1) {
             return this;
         }
-        
-        return this.divideFor(amount, 0);
+
+        // (a + bi)/(c + 0i) = a/c + (b/c)*i
+        double real = this.real / amount;
+        double imaginary = this.imaginary / amount;
+        return new DoubleComplex(real, imaginary);
     }
 
     @Override
-    public Complex divideForImaginary(double amount) {
+    public Complex divideByImaginary(double amount) {
         if (amount == 0) {
             throw new ArithmeticException("Unable to divide by:  0 + 0i");
         }
@@ -255,7 +258,10 @@ class DoubleComplex extends AbstractDoubleComplex implements Cloneable {
             return ZERO_COMPLEX_CARTESIAN;
         }
         
-        return this.divideFor(0, amount);
+        // (a + bi)/(0 + di) = b/d - (a/d)*i
+        double real = this.imaginary / amount;
+        double imaginary = - this.real / amount;
+        return new DoubleComplex(real, imaginary);
     }
     
     
