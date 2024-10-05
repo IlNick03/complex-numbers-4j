@@ -43,12 +43,12 @@ public class ComplexNumbers {
     public static final Complex ONE_COMPLEX_POLAR = new DoublePolarComplex(1, 0);
 
     /**
-     * The Complex value: {@code z = 0 + 1i} , which is the complex unit.
+     * The Complex value: {@code z = +i} , which is the complex unit.
      */
     public static final Complex IMAGINARY_UNIT = new DoubleComplex(0, 1);
 
     /**
-     * The Complex value: {@code z = 0 + 1i} , which is the complex unit, negated.
+     * The Complex value: {@code z = -i} , which is the complex unit, negated.
      */
     public static final Complex IMAGINARY_UNIT_NEGATIVE = new DoubleComplex(0, -1);
     
@@ -344,23 +344,6 @@ public class ComplexNumbers {
     
     /**
      * Solves a linear equation of the form {@code a*x + b = 0},
-     * where the coefficients are real numbers, and returns the root.
-     *
-     * @param a Coefficient of {@code x^1} (must not be zero).
-     * @param b Coefficient of {@code x^0} (known term).
-     * @return The root of the linear equation.
-     * @throws IllegalArgumentException if {@code a} is zero.
-     */
-    public static Complex linearEquationRoot(double a, double b) {
-        if (a == 0) {
-            throw new IllegalArgumentException("Coeff of x^1 is zero.");
-        }
-        // a*x + b = 0  -> x = (-b)/a
-        return new DoubleComplex(-b / a);
-    }
-    
-    /**
-     * Solves a linear equation of the form {@code a*x + b = 0},
      * where the coefficients are {@link Complex} numbers, and returns the root.
      *
      * @param a The complex coefficient of {@code x^1} (must not be zero).
@@ -368,7 +351,7 @@ public class ComplexNumbers {
      * @return The root of the linear equation.
      * @throws IllegalArgumentException if {@code a} is zero.
      */
-    public static Complex linearEquationRoot(Complex a, Complex b) {
+    public static Complex solveLinearEquation(Complex a, Complex b) {
         if (ComplexNumbers.isZero(a)) {
             throw new IllegalArgumentException("Coeff of x^1 is zero.");
         }
@@ -394,18 +377,30 @@ public class ComplexNumbers {
      *         If the roots are complex, they are returned as {@link DoublePolarComplex} instances.
      * @throws IllegalArgumentException if <code>a == 0</code>, as this would make the equation linear rather than quadratic.
      */
-    public static Complex[] equationRoots(double a, double b, double c) {
+    public static Complex[] solveQuadraticEquation(double a, double b, double c) {
         if (a == 0) {
             throw new IllegalArgumentException("Coeff of x^2 is zero.");
         }
+        if ((b == 0) && (c == 0)) {
+            // a(x^2) = 0
+            return ComplexNumbers.findRootsWithOnlyA();
+        }
         
         Complex complexA = new DoubleComplex(a);
-        Complex complexC = new DoublePolarComplex(c);
-        if (b == 0) {
-            return ComplexNumbers.findRoots(complexA, complexC);
-        }
         Complex complexB = new DoubleComplex(b);
-        Complex sqrtOfDelta = ComplexNumbers.sqrtOfDelta(a, b, c);
+        Complex complexC = new DoubleComplex(c);
+        
+        if (b == 0) {
+            // a(x^2) + c = 0;
+            return ComplexNumbers.findRootsWithOnlyAC(complexA, complexC);
+        }
+        if (c == 0) {
+            // a(x^2) + bx = 0
+            return ComplexNumbers.findRootsWithOnlyAB(complexA, complexB);
+        }
+        
+        // a(x^2) + bx + c = 0
+        Complex sqrtOfDelta = ComplexNumbers.sqrtOfDelta(a, b, c);    // delta = b^2 - 4ac
         return ComplexNumbers.findRoots(complexA, complexB, complexC, sqrtOfDelta);
     }
     
@@ -425,37 +420,63 @@ public class ComplexNumbers {
      *         The roots are returned in complex form, even if they are real.
      * @throws UnsupportedOperationException if <code>a</code> is zero, as this would make the equation linear rather than quadratic.
      */
-    public static Complex[] equationRoots(Complex a, Complex b, Complex c) {
+    public static Complex[] solveQuadraticEquation(Complex a, Complex b, Complex c) {
         if (ComplexNumbers.isZero(a)) {
-            throw new UnsupportedOperationException("Coeff of x^2 is zero.");
+            throw new IllegalArgumentException("Coeff of x^2 is zero.");
+        }
+        if (ComplexNumbers.isZero(b) && ComplexNumbers.isZero(c)) {
+            // a(x^2) = 0
+            return ComplexNumbers.findRootsWithOnlyA();
         }
         
         if (ComplexNumbers.isZero(b)) {
-            return ComplexNumbers.findRoots(a, c);
+            // a(x^2) + c = 0;
+            return ComplexNumbers.findRootsWithOnlyAC(a, c);
         }
-        Complex sqrtOfDelta = ComplexNumbers.sqrtOfDelta(a, b, c);
+        if (ComplexNumbers.isZero(c)) {
+            // a(x^2) + bx = 0
+            return ComplexNumbers.findRootsWithOnlyAB(a, b);
+        }
+
+        // a(x^2) + bx + c = 0
+        Complex sqrtOfDelta = ComplexNumbers.sqrtOfDelta(a, b, c);    // delta = b^2 - 4ac
         return ComplexNumbers.findRoots(a, b, c, sqrtOfDelta);
     }
+    
     
     private static Complex sqrtOfDelta(Complex a, Complex b, Complex c) {
         Complex bPow2 = b.pow(2);
         Complex fourAC = a.multiplyBy(c).multiplyByReal(4);
         Complex delta = bPow2.minus(fourAC);
-        // Complex sqrt(delta) = +z , -z
+        // Complex[] sqrt(delta) = {+z , -z}
         return delta.sqrt(POSITIVE_COMPLEX_SQRT);
     }
     
     private static Complex sqrtOfDelta(double a, double b, double c) {
         double delta = (b * b) - 4 * a * c;
-        // Complex sqrt(delta) = +z , -z
+        // Complex[] sqrt(delta) = {+z , -z}
         return ComplexNumbers.sqrtOf(delta, POSITIVE_COMPLEX_SQRT);
     }
+
+    private static Complex[] findRootsWithOnlyA() {
+        // a(x^2) = 0  -> x1 = x2 = 0
+        Complex x1 = ZERO_COMPLEX_CARTESIAN;
+        Complex x2 = x1;
+        return new Complex[] {x1, x2};
+    }
     
-    private static Complex[] findRoots(Complex a, Complex c) {
+    private static Complex[] findRootsWithOnlyAC(Complex a, Complex c) {
         // a(x^2) + c = 0  -> x1 = x2 = +- sqrt(-c/a)
         Complex x1 = c.negative().divideBy(a).sqrt(POSITIVE_COMPLEX_SQRT);
 //        Complex x2 = c.negative().divideFor(a).sqrt(NEGATIVE_COMPLEX_SQRT);
         Complex x2 = x1.negative();
+        return new Complex[] {x1, x2};
+    }
+
+    private static Complex[] findRootsWithOnlyAB(Complex a, Complex b) {
+        // a(x^2) + bx = 0  -> ax + b = 0, x = 0
+        Complex x1 = ZERO_COMPLEX_CARTESIAN;    // x = 0
+        Complex x2 = ComplexNumbers.solveLinearEquation(a, b);    // ax + b = 0 
         return new Complex[] {x1, x2};
     }
     
@@ -470,9 +491,9 @@ public class ComplexNumbers {
             return new Complex[] {x1, x2};
         }
         
-        Complex signB = new DoubleComplex(Math.signum(b.realValue()), Math.signum(b.imaginaryValue())); 
-        Complex expression = b.negative().minus(sqrtOfDelta.multiplyBy(signB));    // -b - sgn(b)*sqrt(delta)
-        // x1 = (-b - sgn(b)*sqrt(delta)) /(2*a)  -> Alternative formula: avoid numeric canceling
+        Complex sgnB = new DoubleComplex(Math.signum(b.realValue()), Math.signum(b.imaginaryValue())); 
+        Complex expression = b.negative().minus(sqrtOfDelta.multiplyBy(sgnB));    // -b - sgn(b)*sqrt(delta)
+        // x1 = (-b - sgn(b)*sqrt(delta)) /(2*a)  -> Alternative formula: avoid catastrophic cancellation
         x1 = expression.divideBy(a.multiplyByReal(2));
         
         if (ComplexNumbers.isZero(expression)) {
@@ -480,7 +501,7 @@ public class ComplexNumbers {
             // x2 = (-b - sqrt(delta)) /(2*a)  -> Traditional formula
             x2 = b.negative().minus(sqrtOfDelta).divideBy(a.multiplyByReal(2));
         } else {
-            // x2 = c / (a * x1)  -> Alternative formula: avoid numeric canceling
+            // x2 = c / (a * x1)  -> Alternative formula: avoid catastrophic cancellation
             x2 = c.divideBy(x1.multiplyBy(a));
         }
         return new Complex[] {x1, x2};

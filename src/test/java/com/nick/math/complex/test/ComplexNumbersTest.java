@@ -136,7 +136,10 @@ public class ComplexNumbersTest {
 
     @Test
     public void testLinearEquationRoot() {
-        Complex root = ComplexNumbers.linearEquationRoot(2.0, -4.0);
+        Complex root = ComplexNumbers.solveLinearEquation(
+                ComplexNumbers.of(2.0), 
+                ComplexNumbers.of(-4.0)
+            );
         Assertions.assertEquals(2.0, root.realValue());
         Assertions.assertEquals(0.0, root.imaginaryValue());
     }
@@ -147,7 +150,7 @@ public class ComplexNumbersTest {
         double a = 1;
         double b = -3;
         double c = 2;
-        Complex[] roots = ComplexNumbers.equationRoots(a, b, c);
+        Complex[] roots = ComplexNumbers.solveQuadraticEquation(a, b, c);
 
         // Check that roots are correct (should be 2 and 1)
         Assertions.assertEquals(2, roots[0].realValue(), 1e-10);
@@ -161,7 +164,7 @@ public class ComplexNumbersTest {
         double a = 1;
         double b = 0;
         double c = 1; // x^2 + 1 = 0  -> x = +i, -i
-        Complex[] roots = ComplexNumbers.equationRoots(a, b, c);
+        Complex[] roots = ComplexNumbers.solveQuadraticEquation(a, b, c);
         Assertions.assertEquals(0, roots[0].realValue(), 1e-10);
         Assertions.assertEquals(1, roots[0].imaginaryValue(), 1e-10);
         Assertions.assertEquals(0, roots[1].realValue(), 1e-10);
@@ -387,19 +390,26 @@ public class ComplexNumbersTest {
         });
     }
 
-    // Test for linearEquationRoot(double a, double b) with a == 0
+    // Test for solveLinearEquation(Complex a, Complex b) with a == 0
     @Test
-    void testLinearEquationRootRealAZero() {
+    public void testLinearEquationRootRealAZero() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            ComplexNumbers.linearEquationRoot(0, 4);
+            ComplexNumbers.solveLinearEquation(
+                    ComplexNumbers.of(0),
+                    ComplexNumbers.of(4.3)
+                );
         });
     }
 
-    // Test for equationRoots(double a, double b, double c) with a == 0
+    // Test for solveQuadraticEquation(Complex a, Complex b, Complex c) with a == 0
     @Test
-    void testQuadraticEquationRootsRealAZero() {
+    public void testQuadraticEquationRootsRealAZero() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            ComplexNumbers.linearEquationRoot(0, 4);
+            ComplexNumbers.solveQuadraticEquation(
+                    ComplexNumbers.of(0),
+                    ComplexNumbers.of(4.0),
+                    ComplexNumbers.of(-3.6)
+                );
         });
     }
 

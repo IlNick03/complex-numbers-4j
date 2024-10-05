@@ -12,7 +12,7 @@ import java.util.Objects;
  * @see DoublePolarComplex
  * @author Nicolas Scalese
  */
-abstract class AbstractDoubleComplex implements Complex, Cloneable {
+abstract class AbstractDoubleComplex implements Complex {
     
     private Complex plus(double otherReal, double otherImaginary) {
         double real = this.realValue() + otherReal;

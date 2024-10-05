@@ -7,7 +7,7 @@ import static com.nick.math.complex.ComplexNumbers.ZERO_COMPLEX_POLAR;
  * A complex number in its polar form: {@code z = r * (cos(theta) + i*sen(theta))} , where:
  * <ul>
  *   <li> {@code r} = modulus
- *   <li> {@code theta} = argument
+ *   <li> {@code theta} = main argument, between 0 (included) and 2*PI (excluded)
  </ul>
  * 
  * @see Complex
@@ -77,7 +77,8 @@ class DoublePolarComplex extends AbstractDoubleComplex {
     public Complex conjugate() {
         // real = modulus * cos(argument) = modulus * cos(-argument)
         // - imaginary = modulus * (- sin(argument)) = modulus * sin(-argument)
-        return new DoublePolarComplex(this.modulus, - this.argument);
+        double argumentNegated = (this.argument == 0) ? 0 : -this.argument;
+        return new DoublePolarComplex(this.modulus, argumentNegated);
     }
 
     @Override

@@ -549,5 +549,5 @@ public interface Complex extends Cloneable {
      *
      * @return a clone of this complex number
      */
-    public Object clone();
+    Object clone();
 }

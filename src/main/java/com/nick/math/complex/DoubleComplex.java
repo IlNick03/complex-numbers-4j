@@ -6,9 +6,9 @@ import static com.nick.math.complex.ComplexNumbers.ZERO_COMPLEX_CARTESIAN;
 /**
  * A complex number in its cartesian form: {@code z = a + i*b}, where:
  * <ul>
- *   <li> {@code a} = real part
- *   <li> {@code a} = imaginary part
- * </ul>
+ *   <li> {@code a} = realNegated part
+   <li> {@code a} = imaginaryNegated part
+ </ul>
  * 
  * @see Complex
  * @see AbstractDoubleComplex
@@ -80,12 +80,15 @@ class DoubleComplex extends AbstractDoubleComplex {
     
     @Override
     public Complex conjugate() {
-        return new DoubleComplex(this.real, - this.imaginary);
+        double imaginaryNegated = (this.imaginary == 0) ? 0 : -this.imaginary;
+        return new DoubleComplex(this.real, imaginaryNegated);
     }
     
     @Override
     public Complex negative() {
-        return new DoubleComplex(- this.real, - this.imaginary);
+        double realNegated = (this.real == 0) ? 0 : -this.real;
+        double imaginaryNegated = (this.imaginary == 0) ? 0 : -this.imaginary;
+        return new DoubleComplex(realNegated, imaginaryNegated);
     }
     
     // -------------------------------------------------------------------------
@@ -212,7 +215,7 @@ class DoubleComplex extends AbstractDoubleComplex {
         double real2plusImg2 = this.re2PlusIm2(otherReal, otherImaginary);
         
         double real = ((a1 * a2) + (b1 * b2)) / real2plusImg2;
-        double imaginary = (b1 * a2) - (a1 * b2) / real2plusImg2;
+        double imaginary = ((b1 * a2) - (a1 * b2)) / real2plusImg2;
         return new DoubleComplex(real, imaginary);
     }
     
