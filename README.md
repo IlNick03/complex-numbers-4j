@@ -171,7 +171,7 @@ Or complex numbers in the form: `r*( cos(theta) + i*sin(theta) )`, where:
 - `multiply(Complex other)`: Returns the product.
 - `divide(Complex other)`: Returns the quotient.
 - `pow(double exponent)`: Raises the complex number to a real power.
-- `allNThRoots(int n)`: Computes all nth roots of the complex number, and return them as an array of complex numbers. You can access each `k`-th root using the `k` index of the array: `result[k]`
+- `allRoots(int n)`: Computes all `n`-th roots of the complex number, and return them as an array of complex numbers. You can access each `k`-th root using the `k` index of the array: `result[k]`
 
 ### ComplexNumbers Class
 

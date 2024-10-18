@@ -199,11 +199,11 @@ public class DoubleCartesianComplexTest {
     public void testInvalidRootIndex() {
         Complex complex = ComplexNumbers.ONE_COMPLEX_CARTESIAN;
         Assertions.assertThrows(ArithmeticException.class, () -> {
-            complex.nThRoot(2, -1);
+            complex.root(2, -1);
         });
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            complex.nThRoot(0, 2);
+            complex.root(0, 2);
         });
     }
 }

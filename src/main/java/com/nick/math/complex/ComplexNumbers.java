@@ -143,8 +143,8 @@ public class ComplexNumbers {
     // ---------------------------------------------------------------------- //
     
     public static boolean isZero(Complex complex) {
-        return Objects.equals(complex, ZERO_COMPLEX_CARTESIAN) || 
-                Objects.equals(complex, ZERO_COMPLEX_POLAR);
+        return ComplexNumbers.equals(complex, ZERO_COMPLEX_CARTESIAN) || 
+                ComplexNumbers.equals(complex, ZERO_COMPLEX_POLAR);
     }
     
     public static boolean isZero(Complex complex, double eps) {
@@ -152,8 +152,12 @@ public class ComplexNumbers {
     }
     
     public static boolean isOne(Complex complex) {
-        return Objects.equals(complex, ONE_COMPLEX_CARTESIAN) || 
-                Objects.equals(complex, ONE_COMPLEX_POLAR);
+        return ComplexNumbers.equals(complex, ONE_COMPLEX_CARTESIAN) || 
+                ComplexNumbers.equals(complex, ONE_COMPLEX_POLAR);
+    }
+    
+    public static boolean equals(Complex c1, Complex c2) {
+        return (c1 == c2) || (c1 != null && c1.equals(c2));
     }
     
     // -------------------------------------------------------------------------
@@ -291,28 +295,20 @@ public class ComplexNumbers {
     
     // -------------------------------------------------------------------------
     
-    public static Complex nThRootOf(double real, int rootIndex, int k) {
-        return new DoublePolarComplex(real, 0).nThRoot(rootIndex, k);
-    }
-    
-    public static Complex[] allNThRootsOf(double real, int rootIndex) {
-        return new DoublePolarComplex(real, 0).allNThRoots(rootIndex);
-    }
-    
-    public static Complex sqrtOf(double real, int k) {
+    public static Complex sqrtOf(double value, int k) {
         if ((k < 0) || (k >= 2)) {
             throw new IllegalArgumentException("k value must be in range: 0 (included) - 2 (excluded)");
         } 
         
-        double sqrt = Math.sqrt(Math.abs(real));
+        double sqrt = Math.sqrt(Math.abs(value));
         if (k == NEGATIVE_COMPLEX_SQRT) {
             sqrt = - sqrt;
         }
         
-        if (FloatingPoint.approxZero(real)) {
+        if (FloatingPoint.approxZero(value)) {
             return ZERO_COMPLEX_CARTESIAN;
         }
-        if (real < 0) {
+        if (value < 0) {
             // sqrt(-9) = +3i (-3i)
             return new DoubleCartesianComplex(0, sqrt);
         }
@@ -320,14 +316,14 @@ public class ComplexNumbers {
         return new DoubleCartesianComplex(sqrt, 0);
     }
     
-    public static Complex[] allSqrtsOf(double real) {
+    public static Complex[] allSqrtsOf(double value) {
         Complex[] roots = new Complex[2]; 
-        double sqrtAbs = Math.sqrt(Math.abs(real));
+        double sqrtAbs = Math.sqrt(Math.abs(value));
         
-        if (FloatingPoint.approxZero(real)) {
+        if (FloatingPoint.approxZero(value)) {
             roots[0] = ZERO_COMPLEX_CARTESIAN;
             roots[1] = roots[0];
-        } else if (real < 0) {
+        } else if (value < 0) {
             // sqrt(-9) = +3i , -3i
             roots[0] = new DoubleCartesianComplex(0, sqrtAbs);
             roots[1] = new DoubleCartesianComplex(0, - sqrtAbs);
@@ -338,6 +334,22 @@ public class ComplexNumbers {
         }
         
         return roots;
+    }
+    
+    public static Complex cbrt(double value, int k) {
+        return ComplexNumbers.root(value, 3, k);
+    }
+    
+    public static Complex[] allCbrts(double value, int k) {
+        return ComplexNumbers.allRoots(value, 3);
+    }
+    
+    public static Complex root(double value, int rootIndex, int k) {
+        return new DoublePolarComplex(value).root(rootIndex, k);
+    }
+    
+    public static Complex[] allRoots(double value, int rootIndex) {
+        return new DoublePolarComplex(value).allRoots(rootIndex);
     }
     
     // -------------------------------------------------------------------------
@@ -352,9 +364,14 @@ public class ComplexNumbers {
      * @throws IllegalArgumentException if {@code a} is zero.
      */
     public static Complex solveLinearEquation(Complex a, Complex b) {
-        if (ComplexNumbers.isZero(a)) {
-            throw new IllegalArgumentException("Coeff of x^1 is zero.");
+        if (a.isZero()) {
+            throw new IllegalArgumentException("Coeff of x^1 cannot be zero.");
         }
+        if (b.isZero()) {
+            // a*x = 0  -> x = 0
+            return ZERO_COMPLEX_CARTESIAN;
+        }
+        
         // a*x + b = 0  -> x = (-b)/a
         return b.negative().divideBy(a);
     }
@@ -379,7 +396,7 @@ public class ComplexNumbers {
      */
     public static Complex[] solveQuadraticEquation(double a, double b, double c) {
         if (a == 0) {
-            throw new IllegalArgumentException("Coeff of x^2 is zero.");
+            throw new IllegalArgumentException("Coeff of x^2 cannot be zero.");
         }
         if ((b == 0) && (c == 0)) {
             // a(x^2) = 0
@@ -421,19 +438,19 @@ public class ComplexNumbers {
      * @throws UnsupportedOperationException if <code>a</code> is zero, as this would make the equation linear rather than quadratic.
      */
     public static Complex[] solveQuadraticEquation(Complex a, Complex b, Complex c) {
-        if (ComplexNumbers.isZero(a)) {
-            throw new IllegalArgumentException("Coeff of x^2 is zero.");
+        if (a.isZero()) {
+            throw new IllegalArgumentException("Coeff of x^2 cannot be zero.");
         }
-        if (ComplexNumbers.isZero(b) && ComplexNumbers.isZero(c)) {
+        if (b.isZero() && c.isZero()) {
             // a(x^2) = 0
             return ComplexNumbers.findRootsWithOnlyA();
         }
         
-        if (ComplexNumbers.isZero(b)) {
+        if (b.isZero()) {
             // a(x^2) + c = 0;
             return ComplexNumbers.findRootsWithOnlyAC(a, c);
         }
-        if (ComplexNumbers.isZero(c)) {
+        if (c.isZero()) {
             // a(x^2) + bx = 0
             return ComplexNumbers.findRootsWithOnlyAB(a, b);
         }
@@ -496,7 +513,7 @@ public class ComplexNumbers {
         // x1 = (-b - sgn(b)*sqrt(delta)) /(2*a)  -> Alternative formula: avoid catastrophic cancellation
         x1 = expression.divideBy(a.multiplyByReal(2));
         
-        if (ComplexNumbers.isZero(expression)) {
+        if (expression.isZero()) {
             // If x1 is zero, we cannot use the alternative formula: dividing by zero is not allowed.
             // x2 = (-b - sqrt(delta)) /(2*a)  -> Traditional formula
             x2 = b.negative().minus(sqrtOfDelta).divideBy(a.multiplyByReal(2));

@@ -216,11 +216,11 @@ public class DoublePolarComplexTest {
         // Testa i casi di indice non valido per la radice n-esima
         Complex complex = ComplexNumbers.ONE_COMPLEX_POLAR;
         Assertions.assertThrows(ArithmeticException.class, () -> {
-            complex.nThRoot(2, -1);
+            complex.root(2, -1);
         });
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            complex.nThRoot(0, 2);
+            complex.root(0, 2);
         });
     }
 }

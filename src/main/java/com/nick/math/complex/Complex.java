@@ -356,10 +356,10 @@ public interface Complex extends Cloneable {
      * @param k the specific root to compute (0 <= k < 2)
      * @return the k-th square root of this complex number as a new {@code Complex}
      * @throws ArithmeticException if {@code k} is out of bounds (not in [0, 2))
-     * @see #nThRoot(int, int)
+     * @see #root(int, int)
      */
     default Complex sqrt(int k) {
-        return this.nThRoot(2, k);
+        return this.root(2, k);
     }
     
     /**
@@ -367,10 +367,10 @@ public interface Complex extends Cloneable {
      * This operation is performed in Polar form.
      *
      * @return an array of {@code Complex} numbers representing all square roots of this complex number
-     * @see #allNThRoots(int)
+     * @see #allRoots(int)
      */
     default Complex[] allSqrts() {
-        return this.allNThRoots(2);
+        return this.allRoots(2);
     }
     
     /**
@@ -381,10 +381,10 @@ public interface Complex extends Cloneable {
      * @param k the specific root to compute (0 <= k < 3)
      * @return the k-th cube root of this complex number as a new {@code Complex}
      * @throws ArithmeticException if {@code k} is out of bounds (not in [0, 3))
-     * @see #nThRoot(int, int)
+     * @see #root(int, int)
      */
     default Complex cbrt(int k) {
-        return this.nThRoot(3, k);
+        return this.root(3, k);
     }
     
     /**
@@ -392,10 +392,10 @@ public interface Complex extends Cloneable {
      * This operation is performed in polar form.
      *
      * @return an array of {@code Complex} numbers representing all cube roots of this complex number
-     * @see #allNThRoots(int)
+     * @see #allRoots(int)
      */
-    default Complex[] allCbcrts() {
-        return this.allNThRoots(3);
+    default Complex[] allCbrts() {
+        return this.allRoots(3);
     }
     
     /**
@@ -408,7 +408,7 @@ public interface Complex extends Cloneable {
      * @throws IllegalArgumentException if {@code n} is less than or equal to 0
      * @throws ArithmeticException if {@code k} is out of bounds (not in [0, n))
      */
-    Complex nThRoot(int n, int k);
+    Complex root(int n, int k);
     
     /**
      * Computes all n-th roots of this complex number.
@@ -418,7 +418,7 @@ public interface Complex extends Cloneable {
      * @return an array of {@code Complex} numbers representing all n-th roots of this complex number
      * @throws IllegalArgumentException if {@code n} is less than or equal to 0
      */
-    Complex[] allNThRoots(int n);
+    Complex[] allRoots(int n);
     
     // -------------------------------------------------------------------------
     

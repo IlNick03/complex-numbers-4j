@@ -73,7 +73,7 @@ abstract class AbstractDoubleComplex implements Complex {
     
     
     @Override
-    public final Complex nThRoot(int rootIndex, int k) {
+    public final Complex root(int rootIndex, int k) {
         if (rootIndex <= 0) {
             throw new IllegalArgumentException();
         }
@@ -87,11 +87,11 @@ abstract class AbstractDoubleComplex implements Complex {
     }
     
     @Override
-    public final Complex[] allNThRoots(int rootIndex) {
+    public final Complex[] allRoots(int rootIndex) {
         Complex[] allRoots = new Complex[rootIndex];
         
         for (int k = 0; k < rootIndex; k++) {
-            allRoots[k] = this.nThRoot(rootIndex, k);
+            allRoots[k] = this.root(rootIndex, k);
         }
         return allRoots;
     } 
