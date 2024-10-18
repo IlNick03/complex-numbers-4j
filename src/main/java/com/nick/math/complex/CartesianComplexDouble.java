@@ -12,20 +12,20 @@ import static java.lang.Math.PI;
  </ul>
  * 
  * @see Complex
- * @see AbstractDoubleComplex
+ * @see AbstractComplexDouble
  * @author Nicolas Scalese
  */
-class DoubleCartesianComplex extends AbstractDoubleComplex {
+class CartesianComplexDouble extends AbstractComplexDouble {
     
     private final double real;
     private final double imaginary;
 
-    public DoubleCartesianComplex(double real) {
+    public CartesianComplexDouble(double real) {
         this.real = real;
         this.imaginary = 0;
     }
     
-    public DoubleCartesianComplex(double real, double imaginary) {
+    public CartesianComplexDouble(double real, double imaginary) {
         this.real = real;
         this.imaginary = imaginary;
     }
@@ -64,14 +64,14 @@ class DoubleCartesianComplex extends AbstractDoubleComplex {
     @Override
     public Complex conjugate() {
         double imaginaryNegated = (this.imaginary == 0) ? 0 : -this.imaginary;
-        return new DoubleCartesianComplex(this.real, imaginaryNegated);
+        return new CartesianComplexDouble(this.real, imaginaryNegated);
     }
     
     @Override
     public Complex negative() {
         double realNegated = (this.real == 0) ? 0 : -this.real;
         double imaginaryNegated = (this.imaginary == 0) ? 0 : -this.imaginary;
-        return new DoubleCartesianComplex(realNegated, imaginaryNegated);
+        return new CartesianComplexDouble(realNegated, imaginaryNegated);
     }
     
     // -------------------------------------------------------------------------
@@ -152,7 +152,7 @@ class DoubleCartesianComplex extends AbstractDoubleComplex {
         
         double real = (a1 * a2) - (b1 * b2);
         double imaginary = (a1 * b2) + (a2 * b1);
-        return new DoubleCartesianComplex(real, imaginary);
+        return new CartesianComplexDouble(real, imaginary);
     }
     
     @Override
@@ -168,7 +168,7 @@ class DoubleCartesianComplex extends AbstractDoubleComplex {
         // (a + bi)*(c + 0i) = ac + (bc)*i
         double real = this.real * amount;
         double imaginary = this.imaginary * amount;
-        return new DoubleCartesianComplex(real, imaginary);
+        return new CartesianComplexDouble(real, imaginary);
     }
 
     @Override
@@ -181,7 +181,7 @@ class DoubleCartesianComplex extends AbstractDoubleComplex {
         // (a + bi)*(0 + di) = -bd + (ad)*i
         double real = - this.imaginary * amount;
         double imaginary = this.real * amount;
-        return new DoubleCartesianComplex(real, imaginary);
+        return new CartesianComplexDouble(real, imaginary);
     }
     
     // -------------------------------------------------------------------------
@@ -199,7 +199,7 @@ class DoubleCartesianComplex extends AbstractDoubleComplex {
         
         double real = ((a1 * a2) + (b1 * b2)) / real2plusImg2;
         double imaginary = ((b1 * a2) - (a1 * b2)) / real2plusImg2;
-        return new DoubleCartesianComplex(real, imaginary);
+        return new CartesianComplexDouble(real, imaginary);
     }
     
     @Override
@@ -232,7 +232,7 @@ class DoubleCartesianComplex extends AbstractDoubleComplex {
         // (a + bi)/(c + 0i) = a/c + (b/c)*i
         double real = this.real / amount;
         double imaginary = this.imaginary / amount;
-        return new DoubleCartesianComplex(real, imaginary);
+        return new CartesianComplexDouble(real, imaginary);
     }
 
     @Override
@@ -247,7 +247,7 @@ class DoubleCartesianComplex extends AbstractDoubleComplex {
         // (a + bi)/(0 + di) = b/d - (a/d)*i
         double real = this.imaginary / amount;
         double imaginary = - this.real / amount;
-        return new DoubleCartesianComplex(real, imaginary);
+        return new CartesianComplexDouble(real, imaginary);
     }
     
     
@@ -260,7 +260,7 @@ class DoubleCartesianComplex extends AbstractDoubleComplex {
         double real2plusImg2 = this.re2PlusIm2(this.real, this.imaginary);
         double real = this.real / real2plusImg2;
         double imaginary = - this.imaginary / real2plusImg2;
-        return new DoubleCartesianComplex(real, imaginary);
+        return new CartesianComplexDouble(real, imaginary);
     }
 
     // -------------------------------------------------------------------------
@@ -279,7 +279,7 @@ class DoubleCartesianComplex extends AbstractDoubleComplex {
     
     @Override
     public Object clone() {
-        return new DoubleCartesianComplex(this.real, this.imaginary);
+        return new CartesianComplexDouble(this.real, this.imaginary);
     }
     
 }

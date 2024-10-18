@@ -1,6 +1,7 @@
 package com.nick.math.complex;
 
 import static java.lang.Math.PI;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Objects;
 
@@ -9,12 +10,12 @@ import java.util.Objects;
  * of a {@link Complex} number.
  * 
  * @see Complex
- * @see DoubleCartesianComplex
- * @see DoublePolarComplex
+ * @see CartesianComplexDouble
+ * @see PolarComplexDouble
  * @author Nicolas Scalese
  */
-abstract class AbstractDoubleComplex implements Complex {
-
+abstract class AbstractComplexDouble implements Complex {
+    
     @Override
     public final double mainArgumentValue2() {
         double angle = this.mainArgumentValue();
@@ -23,13 +24,39 @@ abstract class AbstractDoubleComplex implements Complex {
         }
         return angle;
     }
+
+    
+    @Override
+    public BigDecimal bigRealValue() {
+        return BigDecimal.valueOf(this.realValue());
+    }
+
+    @Override
+    public BigDecimal bigImaginaryValue() {
+        return BigDecimal.valueOf(this.imaginaryValue());
+    }
+
+    @Override
+    public BigDecimal bigModulusValue() {
+        return BigDecimal.valueOf(this.modulusValue());
+    }
+
+    @Override
+    public BigDecimal bigMainArgumentValue() {
+        return BigDecimal.valueOf(this.mainArgumentValue());
+    }
+
+    @Override
+    public BigDecimal bigMainArgumentValue2() {
+        return BigDecimal.valueOf(this.mainArgumentValue2());
+    }
     
     // -------------------------------------------------------------------------
     
     private Complex plus(double otherReal, double otherImaginary) {
         double real = this.realValue() + otherReal;
         double imaginary = this.imaginaryValue() + otherImaginary;
-        return new DoubleCartesianComplex(real, imaginary);
+        return new CartesianComplexDouble(real, imaginary);
     }
     
     @Override
@@ -68,7 +95,7 @@ abstract class AbstractDoubleComplex implements Complex {
     public final Complex pow(double exponent) {
         double modulus = Math.pow(this.modulusValue(), exponent);
         double angulus = exponent * this.mainArgumentValue();
-        return new DoublePolarComplex(modulus, angulus);
+        return new PolarComplexDouble(modulus, angulus);
     }
     
     
@@ -83,7 +110,7 @@ abstract class AbstractDoubleComplex implements Complex {
         
         double modulus = Math.pow(this.modulusValue(), 1. / rootIndex);
         double angulus = (this.mainArgumentValue() + (2 * k * Math.PI)) / rootIndex;
-        return new DoublePolarComplex(modulus, angulus);
+        return new PolarComplexDouble(modulus, angulus);
     }
     
     @Override

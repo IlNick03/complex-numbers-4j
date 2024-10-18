@@ -1,5 +1,6 @@
 package com.nick.math.complex;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 /**
@@ -87,12 +88,16 @@ public interface Complex extends Cloneable {
      */
     double realValue();
     
+    BigDecimal bigRealValue();
+    
     /**
      * Returns the imaginary part of this complex number.
      *
      * @return the imaginary part of this complex number
      */
     double imaginaryValue();
+    
+    BigDecimal bigImaginaryValue();
     
     /**
      * Returns the modulus of this complex number, the modulus of 
@@ -101,6 +106,8 @@ public interface Complex extends Cloneable {
      * @return the modulus of this complex number
      */
     double modulusValue();
+    
+    BigDecimal bigModulusValue();
     
     /**
      * Returns the main argument (angle) of this complex number, 
@@ -127,12 +134,16 @@ public interface Complex extends Cloneable {
      */
     double mainArgumentValue();
     
+    BigDecimal bigMainArgumentValue();
+    
     /**
      * Returns the main argument (angle) of this complex number, 
      * a value between 0 (included) and 2*PI (excluded).
      * @return 
      */
     double mainArgumentValue2();
+    
+    BigDecimal bigMainArgumentValue2();
     
     /**
      * Returns the conjugate of this complex number.

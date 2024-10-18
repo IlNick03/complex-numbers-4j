@@ -12,16 +12,16 @@ import static java.lang.Math.PI;
  </ul>
  * 
  * @see Complex
- * @see AbstractDoubleComplex
+ * @see AbstractComplexDouble
  * @author Nicolas Scalese
  */
-class DoublePolarComplex extends AbstractDoubleComplex {
+class PolarComplexDouble extends AbstractComplexDouble {
     
     private final double modulus;
     private final double argument;
     
 
-    public DoublePolarComplex(double modulus, double angle) {
+    public PolarComplexDouble(double modulus, double angle) {
         if (modulus < 0) {
             throw new IllegalArgumentException("Modulus must be positive or equal to 0.");
         }
@@ -46,7 +46,7 @@ class DoublePolarComplex extends AbstractDoubleComplex {
         }
     }
     
-    public DoublePolarComplex(double real) {
+    public PolarComplexDouble(double real) {
         if (real >= 0) {
             this.modulus = real;
             this.argument = 0;
@@ -83,14 +83,14 @@ class DoublePolarComplex extends AbstractDoubleComplex {
         // real = modulus * cos(argument) = modulus * cos(-argument)
         // - imaginary = modulus * (- sin(argument)) = modulus * sin(-argument)
         double argumentNegated = (this.argument == 0) ? 0 : -this.argument;
-        return new DoublePolarComplex(this.modulus, argumentNegated);
+        return new PolarComplexDouble(this.modulus, argumentNegated);
     }
 
     @Override
     public Complex negative() {
         // - real = modulus * (- cos(argument)) = modulus * cos(argument + pi)
         // - imaginary = modulus * (- sin(argument)) = modulus * sin(argument + pi)
-        return new DoublePolarComplex(this.modulus, this.argument + PI);
+        return new PolarComplexDouble(this.modulus, this.argument + PI);
     }
 
     // -------------------------------------------------------------------------
@@ -147,7 +147,7 @@ class DoublePolarComplex extends AbstractDoubleComplex {
     private Complex multiplyBy(double otherModulus, double otherArgument) {
         double modulus = this.modulus * otherModulus;
         double argument = this.argument + otherArgument;
-        return new DoublePolarComplex(modulus, argument);
+        return new PolarComplexDouble(modulus, argument);
     }
     
     @Override
@@ -205,7 +205,7 @@ class DoublePolarComplex extends AbstractDoubleComplex {
         
         double modulus = this.modulus / otherModulus;
         double argument = this.argument - otherArgument;
-        return new DoublePolarComplex(modulus, argument);
+        return new PolarComplexDouble(modulus, argument);
     }
 
     @Override
@@ -270,7 +270,7 @@ class DoublePolarComplex extends AbstractDoubleComplex {
         
         double modulus = 1.0 / this.modulus;
         double argument = - this.argument;
-        return new DoublePolarComplex(modulus, argument);
+        return new PolarComplexDouble(modulus, argument);
     }
     
     // -------------------------------------------------------------------------
@@ -289,7 +289,7 @@ class DoublePolarComplex extends AbstractDoubleComplex {
 
     @Override
     public Object clone() {
-        return new DoublePolarComplex(this.modulus, this.argument);
+        return new PolarComplexDouble(this.modulus, this.argument);
     }
     
 }
