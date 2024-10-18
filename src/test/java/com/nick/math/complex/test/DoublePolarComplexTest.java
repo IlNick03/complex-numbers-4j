@@ -105,8 +105,8 @@ public class DoublePolarComplexTest {
         Complex complex = ComplexNumbers.ofPolarForm(5.0, Math.PI / 3); 
         Complex result = complex.reciprocal();
         Assertions.assertEquals(1 / 5.0, result.modulusValue(), 1e-9);
-//        Assertions.assertEquals(-Math.PI / 3, result.mainArgumentValue(), 1e-9);
-        Assertions.assertEquals((5 * Math.PI) / 3, result.mainArgumentValue(), 1e-9);
+        Assertions.assertEquals(-Math.PI / 3, result.mainArgumentValue(), 1e-9);
+//        Assertions.assertEquals((5 * Math.PI) / 3, result.mainArgumentValue(), 1e-9);
     }
 
 
@@ -135,7 +135,7 @@ public class DoublePolarComplexTest {
     @Test
     public void testArgumentOfPureImaginaryNumber() {
         Complex complex = ComplexNumbers.ofPolarForm(3.5, - Math.PI / 2);
-        Assertions.assertEquals(3 * Math.PI / 2, complex.mainArgumentValue(), 1e-9);
+        Assertions.assertEquals(- (Math.PI / 2), complex.mainArgumentValue(), 1e-9);
         Assertions.assertEquals(0, complex.realValue(), 1e-9);
         Assertions.assertEquals(-3.5, complex.imaginaryValue());
     }

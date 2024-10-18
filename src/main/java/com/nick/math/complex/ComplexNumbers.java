@@ -22,7 +22,7 @@ public class ComplexNumbers {
      * The Complex value: {@code z = 0 + 0i}, which is the additive identity 
      * in the complex number system.
      */
-    public static final Complex ZERO_COMPLEX_CARTESIAN = new DoubleComplex(0, 0);
+    public static final Complex ZERO_COMPLEX_CARTESIAN = new DoubleCartesianComplex(0, 0);
     
     /**
      * The Complex value: {@code z = 0 * (cos(0) + i*sin(0))}, which is the 
@@ -31,10 +31,10 @@ public class ComplexNumbers {
     public static final Complex ZERO_COMPLEX_POLAR = new DoublePolarComplex(0, 0);
     
     /**
-     * The Complex value: {@code z = 1 + 0i} ,, which is the multiplicative identity 
+     * The Complex value: {@code z = 1 + 0i} , which is the multiplicative identity 
      * in the complex number system.
      */
-    public static final Complex ONE_COMPLEX_CARTESIAN = new DoubleComplex(1, 0);
+    public static final Complex ONE_COMPLEX_CARTESIAN = new DoubleCartesianComplex(1, 0);
     
     /**
      * The Complex value: {@code z = 1 * (cos(0) + i*sen(0))}, which is the 
@@ -45,12 +45,12 @@ public class ComplexNumbers {
     /**
      * The Complex value: {@code z = +i} , which is the complex unit.
      */
-    public static final Complex IMAGINARY_UNIT = new DoubleComplex(0, 1);
+    public static final Complex IMAGINARY_UNIT = new DoubleCartesianComplex(0, 1);
 
     /**
      * The Complex value: {@code z = -i} , which is the complex unit, negated.
      */
-    public static final Complex IMAGINARY_UNIT_NEGATIVE = new DoubleComplex(0, -1);
+    public static final Complex IMAGINARY_UNIT_NEGATIVE = new DoubleCartesianComplex(0, -1);
     
     public static final int POSITIVE_COMPLEX_SQRT = 0;
     public static final int NEGATIVE_COMPLEX_SQRT = 1;
@@ -72,7 +72,7 @@ public class ComplexNumbers {
      */
     public static Complex of(double real) {
         validateFinite(real);
-        return new DoubleComplex(real);
+        return new DoubleCartesianComplex(real);
     }
     
     /**
@@ -85,7 +85,7 @@ public class ComplexNumbers {
      */
     public static Complex ofCartesianForm(double real, double imaginary) {
         validateFinite(real, imaginary);
-        return new DoubleComplex(real, imaginary);
+        return new DoubleCartesianComplex(real, imaginary);
     }
     
     /**
@@ -100,13 +100,13 @@ public class ComplexNumbers {
      * </ul>
      * 
      * @param modulus Modulus (or magnitude) of the complex number.
-     * @param argument Argument (or angle) in radians.
+     * @param angle Argument (or angle) in radians.
      * @return A complex number represented in polar form as {@code r * (cos(theta) + i*sin(theta))}.
-     * @throws IllegalArgumentException if either the modulus or argument is NaN or infinite.
+     * @throws IllegalArgumentException if either the modulus or angle is NaN or infinite.
      */
-    public static Complex ofPolarForm(double modulus, double argument) {
-        validateFinite(modulus, argument);
-        return new DoublePolarComplex(modulus, argument);
+    public static Complex ofPolarForm(double modulus, double angle) {
+        validateFinite(modulus, angle);
+        return new DoublePolarComplex(modulus, angle);
     }
     
      /**
@@ -115,13 +115,13 @@ public class ComplexNumbers {
      * If the modulus is non-negative, the argument is set to 0; otherwise, 
      * it is set to {@code Math.PI}.
      *
-     * @param real The real part of the complex number.
+     * @param realValue The realValue part of the complex number.
      * @return A complex number represented in polar form.
-     * @throws IllegalArgumentException if the provided real number is NaN or infinite.
+     * @throws IllegalArgumentException if the provided realValue number is NaN or infinite.
      */
-    public static Complex ofPolarForm(double real) {
-        validateFinite(real);
-        return new DoublePolarComplex(real);
+    public static Complex ofPolarForm(double realValue) {
+        validateFinite(realValue);
+        return new DoublePolarComplex(realValue);
     }
     
     
@@ -314,10 +314,10 @@ public class ComplexNumbers {
         }
         if (real < 0) {
             // sqrt(-9) = +3i (-3i)
-            return new DoubleComplex(0, sqrt);
+            return new DoubleCartesianComplex(0, sqrt);
         }
         // sqrt(9) = +3 (-3)
-        return new DoubleComplex(sqrt, 0);
+        return new DoubleCartesianComplex(sqrt, 0);
     }
     
     public static Complex[] allSqrtsOf(double real) {
@@ -329,12 +329,12 @@ public class ComplexNumbers {
             roots[1] = roots[0];
         } else if (real < 0) {
             // sqrt(-9) = +3i , -3i
-            roots[0] = new DoubleComplex(0, sqrtAbs);
-            roots[1] = new DoubleComplex(0, - sqrtAbs);
+            roots[0] = new DoubleCartesianComplex(0, sqrtAbs);
+            roots[1] = new DoubleCartesianComplex(0, - sqrtAbs);
         } else {
             // sqrt(9) = +3, -3
-            roots[0] = new DoubleComplex(sqrtAbs, 0);
-            roots[1] = new DoubleComplex(- sqrtAbs, 0);
+            roots[0] = new DoubleCartesianComplex(sqrtAbs, 0);
+            roots[1] = new DoubleCartesianComplex(- sqrtAbs, 0);
         }
         
         return roots;
@@ -373,7 +373,7 @@ public class ComplexNumbers {
      * @param b Coefficient of {@code x^1}.
      * @param c Coefficient of {@code x^1} (known term).
      * @return an array of {@link Complex} objects representing the roots of the quadratic equation.
-     *         If the roots are real, they are returned as {@link DoubleComplex} instances.
+     *         If the roots are real, they are returned as {@link DoubleCartesianComplex} instances.
      *         If the roots are complex, they are returned as {@link DoublePolarComplex} instances.
      * @throws IllegalArgumentException if <code>a == 0</code>, as this would make the equation linear rather than quadratic.
      */
@@ -386,9 +386,9 @@ public class ComplexNumbers {
             return ComplexNumbers.findRootsWithOnlyA();
         }
         
-        Complex complexA = new DoubleComplex(a);
-        Complex complexB = new DoubleComplex(b);
-        Complex complexC = new DoubleComplex(c);
+        Complex complexA = new DoubleCartesianComplex(a);
+        Complex complexB = new DoubleCartesianComplex(b);
+        Complex complexC = new DoubleCartesianComplex(c);
         
         if (b == 0) {
             // a(x^2) + c = 0;
@@ -491,7 +491,7 @@ public class ComplexNumbers {
             return new Complex[] {x1, x2};
         }
         
-        Complex sgnB = new DoubleComplex(Math.signum(b.realValue()), Math.signum(b.imaginaryValue())); 
+        Complex sgnB = new DoubleCartesianComplex(Math.signum(b.realValue()), Math.signum(b.imaginaryValue())); 
         Complex expression = b.negative().minus(sqrtOfDelta.multiplyBy(sgnB));    // -b - sgn(b)*sqrt(delta)
         // x1 = (-b - sgn(b)*sqrt(delta)) /(2*a)  -> Alternative formula: avoid catastrophic cancellation
         x1 = expression.divideBy(a.multiplyByReal(2));

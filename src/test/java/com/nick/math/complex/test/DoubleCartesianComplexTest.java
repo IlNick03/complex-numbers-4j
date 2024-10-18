@@ -3,7 +3,7 @@ package com.nick.math.complex.test;
 import com.nick.math.complex.*;
 import org.junit.jupiter.api.*;
 
-public class DoubleComplexTest {
+public class DoubleCartesianComplexTest {
 
     // ---------------------------------------------------------------------- //
     //  Normal conditions

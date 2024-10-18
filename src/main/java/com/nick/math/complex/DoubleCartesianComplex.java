@@ -2,29 +2,30 @@ package com.nick.math.complex;
 
 import com.nick.math.FloatingPoint;
 import static com.nick.math.complex.ComplexNumbers.ZERO_COMPLEX_CARTESIAN;
+import static java.lang.Math.PI;
 
 /**
  * A complex number in its cartesian form: {@code z = a + i*b}, where:
  * <ul>
- *   <li> {@code a} = realNegated part
-   <li> {@code a} = imaginaryNegated part
+ *   <li> {@code a} = real part
+   <li> {@code a} = imaginary part
  </ul>
  * 
  * @see Complex
  * @see AbstractDoubleComplex
  * @author Nicolas Scalese
  */
-class DoubleComplex extends AbstractDoubleComplex {
+class DoubleCartesianComplex extends AbstractDoubleComplex {
     
     private final double real;
     private final double imaginary;
 
-    public DoubleComplex(double real) {
+    public DoubleCartesianComplex(double real) {
         this.real = real;
         this.imaginary = 0;
     }
     
-    public DoubleComplex(double real, double imaginary) {
+    public DoubleCartesianComplex(double real, double imaginary) {
         this.real = real;
         this.imaginary = imaginary;
     }
@@ -53,42 +54,24 @@ class DoubleComplex extends AbstractDoubleComplex {
 
     @Override
     public double mainArgumentValue() {
-        // I or IV quadrant
-        if (this.real > 0) {
-            return Math.atan(this.imaginary / this.real);
+        double angle = Math.atan2(this.imaginary, this.real);
+        if (angle == -PI) {
+            return PI;
         }
-        // II quadrant
-        if ((this.real < 0) && (this.imaginary >= 0)) {
-            return Math.atan(this.imaginary / this.real) + Math.PI;
-        }
-        // III quadrant
-        if ((this.real < 0) && (this.imaginary < 0)) {
-            return Math.atan(imaginary / real) - Math.PI;
-        }
-        // 90° (PI/2) angulus
-        if ((this.real == 0) && (this.imaginary > 0)) {
-            return Math.PI /2.0 ;
-        }
-        // 270° (3*PI/2) angulus
-        if ((this.real == 0) && (this.imaginary < 0)) {
-            return -Math.PI /2.0 ;
-        }
-         
-        // a = 0 , b = 0 
-        return 0;
+        return angle; 
     }
     
     @Override
     public Complex conjugate() {
         double imaginaryNegated = (this.imaginary == 0) ? 0 : -this.imaginary;
-        return new DoubleComplex(this.real, imaginaryNegated);
+        return new DoubleCartesianComplex(this.real, imaginaryNegated);
     }
     
     @Override
     public Complex negative() {
         double realNegated = (this.real == 0) ? 0 : -this.real;
         double imaginaryNegated = (this.imaginary == 0) ? 0 : -this.imaginary;
-        return new DoubleComplex(realNegated, imaginaryNegated);
+        return new DoubleCartesianComplex(realNegated, imaginaryNegated);
     }
     
     // -------------------------------------------------------------------------
@@ -169,7 +152,7 @@ class DoubleComplex extends AbstractDoubleComplex {
         
         double real = (a1 * a2) - (b1 * b2);
         double imaginary = (a1 * b2) + (a2 * b1);
-        return new DoubleComplex(real, imaginary);
+        return new DoubleCartesianComplex(real, imaginary);
     }
     
     @Override
@@ -185,7 +168,7 @@ class DoubleComplex extends AbstractDoubleComplex {
         // (a + bi)*(c + 0i) = ac + (bc)*i
         double real = this.real * amount;
         double imaginary = this.imaginary * amount;
-        return new DoubleComplex(real, imaginary);
+        return new DoubleCartesianComplex(real, imaginary);
     }
 
     @Override
@@ -198,7 +181,7 @@ class DoubleComplex extends AbstractDoubleComplex {
         // (a + bi)*(0 + di) = -bd + (ad)*i
         double real = - this.imaginary * amount;
         double imaginary = this.real * amount;
-        return new DoubleComplex(real, imaginary);
+        return new DoubleCartesianComplex(real, imaginary);
     }
     
     // -------------------------------------------------------------------------
@@ -216,7 +199,7 @@ class DoubleComplex extends AbstractDoubleComplex {
         
         double real = ((a1 * a2) + (b1 * b2)) / real2plusImg2;
         double imaginary = ((b1 * a2) - (a1 * b2)) / real2plusImg2;
-        return new DoubleComplex(real, imaginary);
+        return new DoubleCartesianComplex(real, imaginary);
     }
     
     @Override
@@ -249,7 +232,7 @@ class DoubleComplex extends AbstractDoubleComplex {
         // (a + bi)/(c + 0i) = a/c + (b/c)*i
         double real = this.real / amount;
         double imaginary = this.imaginary / amount;
-        return new DoubleComplex(real, imaginary);
+        return new DoubleCartesianComplex(real, imaginary);
     }
 
     @Override
@@ -264,7 +247,7 @@ class DoubleComplex extends AbstractDoubleComplex {
         // (a + bi)/(0 + di) = b/d - (a/d)*i
         double real = this.imaginary / amount;
         double imaginary = - this.real / amount;
-        return new DoubleComplex(real, imaginary);
+        return new DoubleCartesianComplex(real, imaginary);
     }
     
     
@@ -277,7 +260,7 @@ class DoubleComplex extends AbstractDoubleComplex {
         double real2plusImg2 = this.re2PlusIm2(this.real, this.imaginary);
         double real = this.real / real2plusImg2;
         double imaginary = - this.imaginary / real2plusImg2;
-        return new DoubleComplex(real, imaginary);
+        return new DoubleCartesianComplex(real, imaginary);
     }
 
     // -------------------------------------------------------------------------
@@ -296,7 +279,7 @@ class DoubleComplex extends AbstractDoubleComplex {
     
     @Override
     public Object clone() {
-        return new DoubleComplex(this.real, this.imaginary);
+        return new DoubleCartesianComplex(this.real, this.imaginary);
     }
     
 }

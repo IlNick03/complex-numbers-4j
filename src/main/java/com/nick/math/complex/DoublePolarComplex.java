@@ -2,12 +2,13 @@ package com.nick.math.complex;
 
 import com.nick.math.FloatingPoint;
 import static com.nick.math.complex.ComplexNumbers.ZERO_COMPLEX_POLAR;
+import static java.lang.Math.PI;
 
 /**
  * A complex number in its polar form: {@code z = r * (cos(theta) + i*sen(theta))} , where:
  * <ul>
  *   <li> {@code r} = modulus
- *   <li> {@code theta} = main argument, between 0 (included) and 2*PI (excluded)
+ *   <li> {@code theta} = main argument, between -PI (excluded) and PI (included)
  </ul>
  * 
  * @see Complex
@@ -20,7 +21,7 @@ class DoublePolarComplex extends AbstractDoubleComplex {
     private final double argument;
     
 
-    public DoublePolarComplex(double modulus, double argument) {
+    public DoublePolarComplex(double modulus, double angle) {
         if (modulus < 0) {
             throw new IllegalArgumentException("Modulus must be positive or equal to 0.");
         }
@@ -31,13 +32,17 @@ class DoublePolarComplex extends AbstractDoubleComplex {
         }
         
         this.modulus = modulus;
-        argument = argument % (2 * Math.PI);
-        if (argument < 0) {
-            // negative value: now between -2*PI (excluded) and 0 (excluded)
-            this.argument = argument + (2 * Math.PI);
+        
+        angle = angle % (2 * PI);
+        // Move the angle in range: (-PI, PI] , if necessary
+        if (angle == PI || angle == -PI) {
+            this.argument = PI;
+        } else if (angle > PI) {
+            this.argument = angle - (2 * PI);
+        } else if (angle < -PI) {
+            this.argument = angle + (2 * PI); 
         } else {
-            // positive or null value: between 0 (included) and 2*PI (excluded)
-            this.argument = argument;
+            this.argument = angle;
         }
     }
     
@@ -47,7 +52,7 @@ class DoublePolarComplex extends AbstractDoubleComplex {
             this.argument = 0;
         } else {
             this.modulus = -real;
-            this.argument = Math.PI;
+            this.argument = PI;
         }
     }
     
@@ -85,7 +90,7 @@ class DoublePolarComplex extends AbstractDoubleComplex {
     public Complex negative() {
         // - real = modulus * (- cos(argument)) = modulus * cos(argument + pi)
         // - imaginary = modulus * (- sin(argument)) = modulus * sin(argument + pi)
-        return new DoublePolarComplex(this.modulus, this.argument + Math.PI);
+        return new DoublePolarComplex(this.modulus, this.argument + PI);
     }
 
     // -------------------------------------------------------------------------
@@ -107,24 +112,24 @@ class DoublePolarComplex extends AbstractDoubleComplex {
     
     @Override
     public boolean hasRealOnly() {
-        return (this.argument == 0) || (this.argument == Math.PI);
+        return (this.argument == 0) || (this.argument == PI);
     }
     
     @Override
     public boolean hasRealOnly(double eps) {
         return (FloatingPoint.approxEqual(this.argument, 0, eps))
-                || (FloatingPoint.approxEqual(this.argument, Math.PI, eps));
+                || (FloatingPoint.approxEqual(this.argument, PI, eps));
     }
     
     @Override
     public boolean hasImaginaryOnly() {
-        return (this.argument == 0.5 * Math.PI) || (this.argument == 1.5 * Math.PI);
+        return (this.argument == 0.5 * PI) || (this.argument == 1.5 * PI);
     }
     
     @Override
     public boolean hasImaginaryOnly(double eps) {
-        return (FloatingPoint.approxEqual(this.argument, 0.5 * Math.PI, eps))
-                || (FloatingPoint.approxEqual(this.argument, 1.5 * Math.PI, eps));
+        return (FloatingPoint.approxEqual(this.argument, 0.5 * PI, eps))
+                || (FloatingPoint.approxEqual(this.argument, 1.5 * PI, eps));
     }
 
     @Override
@@ -173,7 +178,7 @@ class DoublePolarComplex extends AbstractDoubleComplex {
         if (amount > 0) {
             return this.multiplyBy(amount, 0);
         } else {
-            return this.multiplyBy(amount, Math.PI);
+            return this.multiplyBy(amount, PI);
         }
     }
 
@@ -185,9 +190,9 @@ class DoublePolarComplex extends AbstractDoubleComplex {
         }
         
         if (amount > 0) {
-            return this.multiplyBy(amount, (Math.PI)/2.0);
+            return this.multiplyBy(amount, PI/ 2.0);
         } else {
-            return this.multiplyBy(amount, 1.5 * Math.PI);
+            return this.multiplyBy(amount, 1.5 * PI);
         }
     }
     
@@ -234,7 +239,7 @@ class DoublePolarComplex extends AbstractDoubleComplex {
             return this.divideFor(amount, 0);
         } else {
             // argument = theta1 - theta2 = theta1 - PI = theta1 + PI
-            return this.divideFor(amount, - Math.PI);
+            return this.divideFor(amount, - PI);
         }
     }
 
@@ -249,10 +254,10 @@ class DoublePolarComplex extends AbstractDoubleComplex {
         
         if (amount > 0) {
             // argument = theta1 - theta2 = theta1 - PI/2
-            return this.divideFor(amount, (Math.PI)/2.0);
+            return this.divideFor(amount, PI/ 2.0);
         } else {
             // argument = theta1 - theta2 = theta1 - (3/2)*PI = theta1 + PI/2
-            return this.divideFor(amount, - (Math.PI)/2.0);
+            return this.divideFor(amount, -  PI/ 2.0);
         }
     }
 

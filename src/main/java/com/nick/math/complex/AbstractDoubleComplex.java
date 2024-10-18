@@ -1,5 +1,6 @@
 package com.nick.math.complex;
 
+import static java.lang.Math.PI;
 import java.text.DecimalFormat;
 import java.util.Objects;
 
@@ -8,52 +9,63 @@ import java.util.Objects;
  * of a {@link Complex} number.
  * 
  * @see Complex
- * @see DoubleComplex
+ * @see DoubleCartesianComplex
  * @see DoublePolarComplex
  * @author Nicolas Scalese
  */
 abstract class AbstractDoubleComplex implements Complex {
+
+    @Override
+    public final double mainArgumentValue2() {
+        double angle = this.mainArgumentValue();
+        if (angle < 0) {
+            angle += 2 * PI;
+        }
+        return angle;
+    }
+    
+    // -------------------------------------------------------------------------
     
     private Complex plus(double otherReal, double otherImaginary) {
         double real = this.realValue() + otherReal;
         double imaginary = this.imaginaryValue() + otherImaginary;
-        return new DoubleComplex(real, imaginary);
+        return new DoubleCartesianComplex(real, imaginary);
     }
     
     @Override
-    public Complex plus(Complex complex) {
+    public final Complex plus(Complex complex) {
         return this.plus(complex.realValue(), complex.imaginaryValue());
     }
 
     @Override
-    public Complex plusReal(double amount) {
+    public final Complex plusReal(double amount) {
         return this.plus(amount, 0);
     }
 
     @Override
-    public Complex plusImaginary(double amount) {
+    public final Complex plusImaginary(double amount) {
         return this.plus(0, amount);
     }
 
     @Override
-    public Complex minus(Complex complex) {
+    public final Complex minus(Complex complex) {
         return this.plus(- complex.realValue(), - complex.imaginaryValue());
     }
 
     @Override
-    public Complex minusReal(double amount) {
+    public final Complex minusReal(double amount) {
         return this.plus(- amount, 0);
     }
 
     @Override
-    public Complex minusImaginary(double amount) {
+    public final Complex minusImaginary(double amount) {
         return this.plus(0, - amount);
     }
     
     // -------------------------------------------------------------------------
 
     @Override
-    public Complex pow(double exponent) {
+    public final Complex pow(double exponent) {
         double modulus = Math.pow(this.modulusValue(), exponent);
         double angulus = exponent * this.mainArgumentValue();
         return new DoublePolarComplex(modulus, angulus);
@@ -61,7 +73,7 @@ abstract class AbstractDoubleComplex implements Complex {
     
     
     @Override
-    public Complex nThRoot(int rootIndex, int k) {
+    public final Complex nThRoot(int rootIndex, int k) {
         if (rootIndex <= 0) {
             throw new IllegalArgumentException();
         }
@@ -75,7 +87,7 @@ abstract class AbstractDoubleComplex implements Complex {
     }
     
     @Override
-    public Complex[] allNThRoots(int rootIndex) {
+    public final Complex[] allNThRoots(int rootIndex) {
         Complex[] allRoots = new Complex[rootIndex];
         
         for (int k = 0; k < rootIndex; k++) {
@@ -87,7 +99,7 @@ abstract class AbstractDoubleComplex implements Complex {
     // -------------------------------------------------------------------------
     
     @Override
-    public String cartesianForm() {
+    public final String cartesianForm() {
         //  -3 + 5i
         //  +3 - 5i
         StringBuilder sb = new StringBuilder();
@@ -100,7 +112,7 @@ abstract class AbstractDoubleComplex implements Complex {
     }
     
     @Override
-    public String cartesianForm(DecimalFormat df) {
+    public final String cartesianForm(DecimalFormat df) {
         String realAbsString = df.format(Math.abs(this.realValue()));
         String imaginaryAbsString = df.format(Math.abs(this.imaginaryValue()));
         
@@ -121,7 +133,7 @@ abstract class AbstractDoubleComplex implements Complex {
     }
     
     @Override
-    public String cartesianCoordinates() {
+    public final String cartesianCoordinates() {
         //  (-3, 5)
         //  (3, -5)
         StringBuilder sb = new StringBuilder();
@@ -132,7 +144,7 @@ abstract class AbstractDoubleComplex implements Complex {
     }
     
     @Override
-    public String cartesianCoordinates(DecimalFormat df) {
+    public final String cartesianCoordinates(DecimalFormat df) {
         String realString = df.format(this.realValue());
         String imaginaryString = df.format(this.imaginaryValue());
         
@@ -144,7 +156,7 @@ abstract class AbstractDoubleComplex implements Complex {
     }
 
     @Override
-    public String polarForm() {
+    public final String polarForm() {
         //  1 * (cos(2.094) + i*sen(2.094))   // argument = (2/3) * PI
         //  1 * (cos(4.188) + i*sen(4.188))   // argument = (4/3) * PI
         StringBuilder sb = new StringBuilder();
@@ -155,7 +167,7 @@ abstract class AbstractDoubleComplex implements Complex {
     }
     
     @Override
-    public String polarForm(DecimalFormat df) {
+    public final String polarForm(DecimalFormat df) {
         String modulusString = df.format(this.modulusValue());
         String mainArgumentString = df.format(this.mainArgumentValue());
         
@@ -167,7 +179,7 @@ abstract class AbstractDoubleComplex implements Complex {
     }
     
     @Override
-    public String polarCoordinates() {
+    public final String polarCoordinates() {
         //  (r= 1, theta= 2.094)   // (2/3) * PI
         //  (r= 1, theta= 4.188)   // (4/3) * PI
         StringBuilder sb = new StringBuilder();
@@ -177,7 +189,7 @@ abstract class AbstractDoubleComplex implements Complex {
     }
     
     @Override
-    public String polarCoordinates(DecimalFormat df) {
+    public final String polarCoordinates(DecimalFormat df) {
         String modulusString = df.format(this.modulusValue());
         String mainArgumentString = df.format(this.mainArgumentValue());
         
@@ -188,7 +200,7 @@ abstract class AbstractDoubleComplex implements Complex {
     }
     
     @Override
-    public String eulerianForm() {
+    public final String eulerianForm() {
         //  1 * e^(2.094i)   // argument = (2/3) * PI
         //  1 * e^(4.188i)   // argument = (4/3) * PI
         StringBuilder sb = new StringBuilder();
@@ -199,7 +211,7 @@ abstract class AbstractDoubleComplex implements Complex {
     }
     
     @Override
-    public String eulerianForm(DecimalFormat df) {
+    public final String eulerianForm(DecimalFormat df) {
         String modulusString = df.format(this.modulusValue());
         String mainArgumentString = df.format(this.mainArgumentValue());
         

@@ -116,7 +116,7 @@ public class LinearEquationExample {
         Complex a = ComplexNumbers.ofCartesianForm(2, 1);  // 2 + i
         Complex b = ComplexNumbers.ofCartesianForm(-1, -3); // -1 - 3i
 
-        Complex solution = ComplexNumbers.solveLinear(a, b);
+        Complex solution = ComplexNumbers.solveLinearEquation(a, b);
 
         System.out.println("Solution: " + solution); // Output: Solution to the equation
     }
@@ -136,13 +136,13 @@ public class QuadraticEquationExample {
         Complex b = ComplexNumbers.ofCartesianForm(0, 1);  // i
         Complex c = ComplexNumbers.ofCartesianForm(-1, 0); // -1
 
-        Complex[] solutionsForComplexCoeffs = ComplexEquation.solveQuadratic(a, b, c);
+        Complex[] solutionsForComplexCoeffs = ComplexEquation.solveQuadraticEquation(a, b, c);
 
         for (Complex solution : solutionsForComplexCoeffs) {
             System.out.println("Solution: " + solution); // Outputs both solutions
         }
 
-        Complex[] solutionsForRealCoeffs = ComplexEquation.solveQuadratic(1, 0, 1);
+        Complex[] solutionsForRealCoeffs = ComplexEquation.solveQuadraticEquation(1, 0, 1);
 
         for (Complex solution : solutionsForRealCoeffs) {
             System.out.println("Solution: " + solution); // Outputs both solutions
@@ -161,7 +161,7 @@ The `Complex` interface represents a complex number in the form `(a + b*i)`, whe
 
 Or complex numbers in the form: `r*( cos(theta) + i*sin(theta) )`, where:
 - `r` is the modulus
-- `theta` is the main argument, between 0 (included) and 2*PI (excluded)
+- `theta` is the main argument, between -PI (excluded) and PI (included)
 
 
 #### Key Methods:
@@ -170,12 +170,12 @@ Or complex numbers in the form: `r*( cos(theta) + i*sin(theta) )`, where:
 - `subtract(Complex other)`: Returns the difference.
 - `multiply(Complex other)`: Returns the product.
 - `divide(Complex other)`: Returns the quotient.
-- `pow(int exponent)`: Raises the complex number to an integer power.
+- `pow(double exponent)`: Raises the complex number to a real power.
 - `allNThRoots(int n)`: Computes all nth roots of the complex number, and return them as an array of complex numbers. You can access each `k`-th root using the `k` index of the array: `result[k]`
 
 ### ComplexNumbers Class
 
-The `ComplexNumbers` class allows you to create instances of `Complex`..
+The `ComplexNumbers` class allows you to create instances of `Complex`.
 
 #### Static factory methods:
 - `of(double real)` : Creates a complex number from a real number, represented as: \(r + 0i\)
@@ -187,9 +187,9 @@ And also provides static methods to solve equations involving complex coefficien
 
 #### Key Methods:
 
-- `solveLinear(Complex a, Complex b)`: Solves a linear equation \(a*x + b = 0\) and returns the solution as a `Complex` number.
-- `solveQuadratic(double a, double b, double c)`: Solves a quadratic equation \(a*x^2 + b*x + c = 0\) and returns the two solutions as an array of `Complex` numbers.
-- `solveQuadratic(Complex a, Complex b, Complex c)`: Solves a quadratic equation \(a*x^2 + b*x + c = 0\) and returns the two solutions as an array of `Complex` numbers.
+- `solveLinearEquation(Complex a, Complex b)`: Solves a linear equation \(a*x + b = 0\) and returns the solution as a `Complex` number.
+- `solveQuadraticEquation(double a, double b, double c)`: Solves a quadratic equation \(a*x^2 + b*x + c = 0\) and returns the two solutions as an array of `Complex` numbers.
+- `solveQuadraticEquation(Complex a, Complex b, Complex c)`: Solves a quadratic equation \(a*x^2 + b*x + c = 0\) and returns the two solutions as an array of `Complex` numbers.
 
 ## License
 

@@ -107,7 +107,7 @@ public interface Complex extends Cloneable {
      * the angulus formed between {@code (a,b)} vector and the {@code X} axis.
      * <p>
      * @apiNote
-     * Values of {@code theta} angle: 
+     * Values of {@code theta} angle, between -PI (excluded) and PI (included): 
      * <ul>
      *   <li> {@code z = a + 0i}: </li>
      *        {@code theta = 0}
@@ -123,8 +123,16 @@ public interface Complex extends Cloneable {
      *        {@code theta = (3/2)*pi}
      * </ul>
      * @return the main argument of this complex number
+     * @see Math#atan2(double, double) 
      */
     double mainArgumentValue();
+    
+    /**
+     * Returns the main argument (angle) of this complex number, 
+     * a value between 0 (included) and 2*PI (excluded).
+     * @return 
+     */
+    double mainArgumentValue2();
     
     /**
      * Returns the conjugate of this complex number.
