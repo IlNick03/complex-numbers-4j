@@ -27,7 +27,7 @@ public class ComplexNumbersTest {
     }
 
     @Test
-    void testOfPolarForm() {
+    public void testOfPolarForm() {
         Complex complex = ComplexNumbers.ofPolarForm(5.0, Math.PI / 6);
         Assertions.assertEquals(5.0, complex.modulusValue());
         Assertions.assertEquals(Math.PI / 6, complex.mainArgumentValue());
@@ -79,7 +79,7 @@ public class ComplexNumbersTest {
         Assertions.assertEquals(-25, product.imaginaryValue());
 
         // Test correct multiplication of multiple Complex numbers with polar
-        Complex c4 = ComplexNumbers.ofPolarForm(2);
+        Complex c4 = ComplexNumbers.of(2);
         product = ComplexNumbers.multiplyAll(c1, c2, c3, c4);
         Assertions.assertEquals(-100, product.realValue());
         Assertions.assertEquals(-50, product.imaginaryValue());
@@ -106,13 +106,13 @@ public class ComplexNumbersTest {
 
     @Test
     public void testSqrtOf() {
-        // Test square root of positive real number
-        Complex resultPositive = ComplexNumbers.sqrtOf(9, 0);
+        // Test square complexRoot of positive real number
+        Complex resultPositive = ComplexNumbers.complexSqrtOf(9, 0);
         Assertions.assertEquals(3, resultPositive.realValue(), 1e-10);
         Assertions.assertEquals(0, resultPositive.imaginaryValue(), 1e-10);
         
-        // Test square root of negative real number (should be imaginary)
-        resultPositive = ComplexNumbers.sqrtOf(-9, 1);
+        // Test square complexRoot of negative real number (should be imaginary)
+        resultPositive = ComplexNumbers.complexSqrtOf(-9, 1);
         Assertions.assertEquals(0, resultPositive.realValue(), 1e-10);
         Assertions.assertEquals(-3, resultPositive.imaginaryValue(), 1e-10);
     }
@@ -120,14 +120,14 @@ public class ComplexNumbersTest {
     @Test
     public void testAllSqrtsOf() {
         // Test square roots of positive number
-        Complex[] roots = ComplexNumbers.allSqrtsOf(16);
+        Complex[] roots = ComplexNumbers.allComplexSqrtsOf(16);
         Assertions.assertEquals(4, roots[0].realValue(), 1e-10);
         Assertions.assertEquals(0, roots[0].imaginaryValue(), 1e-10);
         Assertions.assertEquals(-4, roots[1].realValue(), 1e-10);
         Assertions.assertEquals(0, roots[1].imaginaryValue(), 1e-10);
         
         // Test square roots of negative number
-        roots = ComplexNumbers.allSqrtsOf(-16);
+        roots = ComplexNumbers.allComplexSqrtsOf(-16);
         Assertions.assertEquals(0, roots[0].realValue(), 1e-10);
         Assertions.assertEquals(4, roots[0].imaginaryValue(), 1e-10);
         Assertions.assertEquals(0, roots[1].realValue(), 1e-10);
@@ -178,8 +178,8 @@ public class ComplexNumbersTest {
 
     @Test
     public void testOfPolarFormWithModulusOnly() {
-        Complex complex1 = ComplexNumbers.ofPolarForm(4.3);
-        Complex complex2 = ComplexNumbers.ofPolarForm(-4.3);
+        Complex complex1 = ComplexNumbers.of(4.3);
+        Complex complex2 = ComplexNumbers.of(-4.3);
         
         Assertions.assertEquals(4.3, complex1.modulusValue());
         Assertions.assertEquals(0, complex1.mainArgumentValue());
@@ -272,7 +272,7 @@ public class ComplexNumbersTest {
 
     @Test
     public void testSqrtOfZero() {
-        Complex resultPositive = ComplexNumbers.sqrtOf(0, 0);
+        Complex resultPositive = ComplexNumbers.complexSqrtOf(0, 0);
         Assertions.assertEquals(0, resultPositive.realValue(), 1e-10);
         Assertions.assertEquals(0, resultPositive.imaginaryValue(), 1e-10);
     }
@@ -280,7 +280,7 @@ public class ComplexNumbersTest {
     @Test
     public void testAllSqrtsOfZero() {
         // Test square roots of zero
-        Complex[] roots = ComplexNumbers.allSqrtsOf(0);
+        Complex[] roots = ComplexNumbers.allComplexSqrtsOf(0);
         Assertions.assertEquals(0, roots[0].realValue(), 1e-10);
         Assertions.assertEquals(0, roots[0].imaginaryValue(), 1e-10);
         Assertions.assertEquals(0, roots[1].realValue(), 1e-10);
@@ -381,12 +381,12 @@ public class ComplexNumbersTest {
     public void testSqrtOfInvalid () {
         // Test invalid k value
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            ComplexNumbers.sqrtOf(9, 2);
+            ComplexNumbers.complexSqrtOf(9, 2);
         });
 
         // Test invalid n value
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            ComplexNumbers.sqrtOf(9, -1);
+            ComplexNumbers.complexSqrtOf(9, -1);
         });
     }
 

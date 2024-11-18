@@ -24,7 +24,6 @@ abstract class AbstractComplexDouble implements Complex {
         }
         return angle;
     }
-
     
     @Override
     public BigDecimal bigRealValue() {
@@ -108,7 +107,7 @@ abstract class AbstractComplexDouble implements Complex {
             throw new ArithmeticException();
         }
         
-        double modulus = Math.pow(this.modulusValue(), 1. / rootIndex);
+        double modulus = Math.pow(this.modulusValue(), 1.0 / rootIndex);
         double angulus = (this.mainArgumentValue() + (2 * k * Math.PI)) / rootIndex;
         return new PolarComplexDouble(modulus, angulus);
     }
@@ -275,10 +274,5 @@ abstract class AbstractComplexDouble implements Complex {
         hash = 97 * hash + Objects.hash(this.imaginaryValue());
         return hash;
     }
-    
-    // -------------------------------------------------------------------------
-    
-    @Override
-    public abstract Object clone();
     
 }

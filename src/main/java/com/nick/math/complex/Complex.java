@@ -1,5 +1,6 @@
 package com.nick.math.complex;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
@@ -59,7 +60,7 @@ import java.text.DecimalFormat;
  *   <li> String representation:</li>
  *     <ul>
  *       <li> Regardless of the final result of operations, it is possible for both 
- *           implementations to get a {@link String} representation in Cartesian {@link #cartesianForm()},
+ *            implementations to get a {@link String} representation in Cartesian {@link #cartesianForm()},
  *            polar {@link #polarForm()}, and exponential {@link #eulerianForm()} forms 
  *            of the same number.</li>
  *       <li> The {@link #toString()} method returns a polar representation only 
@@ -79,7 +80,7 @@ import java.text.DecimalFormat;
  * @see ComplexNumbers
  * @author Nicolas Scalese
  */
-public interface Complex extends Cloneable {
+public interface Complex extends Serializable {
     
     /**
      * Returns the real part of this complex number.
@@ -172,8 +173,9 @@ public interface Complex extends Cloneable {
     
     /**
      * Checks if this complex number is zero or approximates zero, within
-     * the tolerance of:  {@code 4 *} {@link com.nick.math.FloatingPoint#DOUBLE_EPS}
+     * the specified tolerance.
      *
+     * @param eps
      * @return {@code true} if this complex number is zero, {@code false} otherwise
      * @see com.nick.math.FloatingPoint#approxZero(double) 
      * @see #multiplyBy(com.nick.math.complex.Complex) 
@@ -554,6 +556,8 @@ public interface Complex extends Cloneable {
      */
     boolean equals(Complex complex, double epsilon);
     
+    boolean deepEquals(Object complex);
+    
     /**
      * Returns the hash code value for this complex number.
      * The hash code is computed based on the real and imaginary parts of this number.
@@ -563,10 +567,4 @@ public interface Complex extends Cloneable {
     @Override
     int hashCode();
     
-    /**
-     * Creates and returns a copy (clone) of this complex number.
-     *
-     * @return a clone of this complex number
-     */
-    Object clone();
 }

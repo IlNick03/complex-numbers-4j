@@ -1,8 +1,9 @@
 package com.nick.math.complex;
 
 import com.nick.math.FloatingPoint;
-import java.util.*;
 import static com.nick.math.FloatingPoint.NAN_OR_INFINITY_ARGUMENT;
+import java.util.*;
+import java.math.BigDecimal;
 
 /**
  * This static class allows you to create instances for {@link Complex} interface,
@@ -64,15 +65,54 @@ public class ComplexNumbers {
     // ---------------------------------------------------------------------- //
     
     /**
-     * Creates a complex number from a real number, represented as {@code r + 0i}.
+     * Returns a copy of the given {@code Complex} number. 
+     * <p>
+     * More specifically: creates another instance of {@link Complex} using the same 
+     * implementing class (Cartesian or Polar form), and assigns it the same value
      *
-     * @param real A real number to convert to a complex number.
+     * @param complex A complex number to copy.
+     * @return Returns a copy of the given {@code Complex} number.
+     * @throws UnsupportedOperationException if the provided complex number implementation is not supported (yet).
+     */
+    public static Complex of(Complex complex) {
+        if (complex instanceof CartesianComplexDouble) {
+            return new CartesianComplexDouble(complex);
+        }
+        if (complex instanceof PolarComplexDouble) {
+            return new PolarComplexDouble(complex);
+        }
+        // should be updated in the future
+        throw new UnsupportedOperationException("This instance/implementation of \'Complex\' is not supported (yet).");
+    }
+    
+    /**
+     * Creates a complex number from a real {@code double} number, represented as {@code r + 0i}.
+     *
+     * @param realValue A realValue number to convert to a complex number.
      * @return A complex number equivalent to {@code r + 0i}.
      * @throws IllegalArgumentException if the provided real number is NaN or infinite.
      */
-    public static Complex of(double real) {
-        validateFinite(real);
-        return new CartesianComplexDouble(real);
+    public static Complex of(double realValue) {
+        validateFinite(realValue);
+        return new CartesianComplexDouble(realValue);
+    }
+    
+    /**
+     * Creates a complex number from a real {@code BigDecimal} number, represented as {@code r + 0i}.
+     * 
+     * @apiNote 
+     * A future release of this library will add {@link Complex} implementations handling
+     * {@code BigDecimal} values for real part, imaginary part, modulus, main argument. 
+     * For now, complex numbers are created using the {@code double} value of the given BigDecimal(s).
+     *
+     * @param realValue A realValue number to convert to a complex number.
+     * @return A complex number equivalent to {@code r + 0i}.
+     * @see BigDecimal#doubleValue()
+     * @throws IllegalArgumentException if the provided real number is NaN or infinite.
+     */
+    public static Complex of(BigDecimal realValue) {
+        validateFinite(realValue);
+        return new CartesianComplexDouble(realValue.doubleValue());  // should be updated in the future
     }
     
     /**
@@ -89,7 +129,26 @@ public class ComplexNumbers {
     }
     
     /**
-     * Creates a complex number from its polar form, defined by a modulus and an angle: 
+     * Creates a complex number from its Cartesian form, represented as {@code a + i*b}.
+     * 
+     * @apiNote 
+     * A future release of this library will add {@link Complex} implementations handling
+     * {@code BigDecimal} values for real part, imaginary part, modulus, main argument. 
+     * For now, complex numbers are created using the {@code double} value of the given BigDecimal(s).
+     *
+     * @param real Real part of the complex number.
+     * @param imaginary Imaginary part of the complex number.
+     * @return A complex number represented as {@code a + i*b}.
+     * @see BigDecimal#doubleValue()
+     * @throws IllegalArgumentException if either the real or imaginary part is NaN or infinite.
+     */
+    public static Complex ofCartesianForm(BigDecimal real, BigDecimal imaginary) {
+        validateFinite(real, imaginary);
+        return new CartesianComplexDouble(real.doubleValue(), imaginary.doubleValue());  // should be updated in the future
+    }
+    
+    /**
+     * Creates a complex number from its {@code double} Polar form, defined by a modulus and an angle: 
      * {@code z = r * (cos(theta) + i*sen(theta))}
      * <ul>
      *   <li> Modulus ({@code r}): </li> 
@@ -109,19 +168,67 @@ public class ComplexNumbers {
         return new PolarComplexDouble(modulus, angle);
     }
     
-     /**
-     * Creates a complex number from a real number, represented in polar form.
+    /**
+     * Creates a complex number from its {@code double} Polar form, defined by a modulus and an angle: 
+     * {@code z = r * (cos(theta) + i*sen(theta))}
+     * <ul>
+     *   <li> Modulus ({@code r}): </li> 
+     *        Distance between the origin {@code (0,0)} and the point {@code (a,b)}, 
+     *        where {@code (a,b)} are the real and imaginary part of {@code z} .
+     *   <li> Angle ({@code theta}): </li>
+     *        Angle between the {@code (0,0)-(a,b)} segment and the {@code X} axis.
+     * </ul>
+     * 
+     * @apiNote 
+     * A future release of this library will add {@link Complex} implementations handling
+     * {@code BigDecimal} values for real part, imaginary part, modulus, main argument. 
+     * For now, complex numbers are created using the {@code double} value of the given BigDecimal(s).
+     * 
+     * @param modulus Modulus (or magnitude) of the complex number.
+     * @param angle Argument (or angle) in radians.
+     * @return A complex number represented in polar form as {@code r * (cos(theta) + i*sin(theta))}.
+     * @see BigDecimal#doubleValue()
+     * @throws IllegalArgumentException if either the modulus or angle is NaN or infinite.
+     */
+    public static Complex ofPolarForm(BigDecimal modulus, BigDecimal angle) {
+        validateFinite(modulus, angle);
+        return new PolarComplexDouble(modulus.doubleValue(), angle.doubleValue());  // should be updated in the future
+    }
+    
+    /**
+     * Creates a complex number from a {@code double} real number, represented in polar form.
      * More specifically, the given number is interpreted as a modulus.
      * If the modulus is non-negative, the argument is set to 0; otherwise, 
      * it is set to {@code Math.PI}.
      *
-     * @param realValue The realValue part of the complex number.
+     * @param realValue The real part of the complex number.
      * @return A complex number represented in polar form.
      * @throws IllegalArgumentException if the provided realValue number is NaN or infinite.
      */
     public static Complex ofPolarForm(double realValue) {
         validateFinite(realValue);
         return new PolarComplexDouble(realValue);
+    }
+    
+    /**
+     * Creates a complex number from a {@code double} real number, represented in polar form.
+     * More specifically, the given number is interpreted as a modulus.
+     * If the modulus is non-negative, the argument is set to 0; otherwise, 
+     * it is set to {@code Math.PI}.
+     * 
+     * @apiNote 
+     * A future release of this library will add {@link Complex} implementations handling
+     * {@code BigDecimal} values for real part, imaginary part, modulus, main argument. 
+     * For now, complex numbers are created using the {@code double} value of the given BigDecimal(s).
+     *
+     * @param realValue The real part of the complex number.
+     * @return A complex number represented in polar form.
+     * @see BigDecimal#doubleValue()
+     * @throws IllegalArgumentException if the provided realValue number is NaN or infinite.
+     */
+    public static Complex ofPolarForm(BigDecimal realValue) {
+        validateFinite(realValue);
+        return new PolarComplexDouble(realValue.doubleValue());  // should be updated in the future
     }
     
     
@@ -137,14 +244,21 @@ public class ComplexNumbers {
         }
     }
     
+    private static void validateFinite(BigDecimal value) {
+        validateFinite(value.doubleValue());
+    }
+    
+    private static void validateFinite(BigDecimal value1, BigDecimal value2) {
+        validateFinite(value1.doubleValue(), value2.doubleValue());
+    }
+    
 
     // ---------------------------------------------------------------------- //
     //  Other static methods
     // ---------------------------------------------------------------------- //
     
     public static boolean isZero(Complex complex) {
-        return ComplexNumbers.equals(complex, ZERO_COMPLEX_CARTESIAN) || 
-                ComplexNumbers.equals(complex, ZERO_COMPLEX_POLAR);
+        return complex.isZero();
     }
     
     public static boolean isZero(Complex complex, double eps) {
@@ -152,12 +266,15 @@ public class ComplexNumbers {
     }
     
     public static boolean isOne(Complex complex) {
-        return ComplexNumbers.equals(complex, ONE_COMPLEX_CARTESIAN) || 
-                ComplexNumbers.equals(complex, ONE_COMPLEX_POLAR);
+        return complex.isOne();
     }
     
     public static boolean equals(Complex c1, Complex c2) {
         return (c1 == c2) || (c1 != null && c1.equals(c2));
+    }
+    
+    public static boolean deepEquals(Complex c1, Complex c2) {
+        return (c1 == c2) || (c1 != null && c1.deepEquals(c2));
     }
     
     // -------------------------------------------------------------------------
@@ -295,7 +412,7 @@ public class ComplexNumbers {
     
     // -------------------------------------------------------------------------
     
-    public static Complex sqrtOf(double value, int k) {
+    public static Complex complexSqrtOf(double value, int k) {
         if ((k < 0) || (k >= 2)) {
             throw new IllegalArgumentException("k value must be in range: 0 (included) - 2 (excluded)");
         } 
@@ -310,13 +427,13 @@ public class ComplexNumbers {
         }
         if (value < 0) {
             // sqrt(-9) = +3i (-3i)
-            return new CartesianComplexDouble(0, sqrt);
+            return ComplexNumbers.ofCartesianForm(0, sqrt);
         }
         // sqrt(9) = +3 (-3)
-        return new CartesianComplexDouble(sqrt, 0);
+        return ComplexNumbers.ofCartesianForm(sqrt, 0);
     }
     
-    public static Complex[] allSqrtsOf(double value) {
+    public static Complex[] allComplexSqrtsOf(double value) {
         Complex[] roots = new Complex[2]; 
         double sqrtAbs = Math.sqrt(Math.abs(value));
         
@@ -325,42 +442,42 @@ public class ComplexNumbers {
             roots[1] = roots[0];
         } else if (value < 0) {
             // sqrt(-9) = +3i , -3i
-            roots[0] = new CartesianComplexDouble(0, sqrtAbs);
-            roots[1] = new CartesianComplexDouble(0, - sqrtAbs);
+            roots[0] = ComplexNumbers.ofCartesianForm(0, sqrtAbs);
+            roots[1] = ComplexNumbers.ofCartesianForm(0, - sqrtAbs);
         } else {
             // sqrt(9) = +3, -3
-            roots[0] = new CartesianComplexDouble(sqrtAbs, 0);
-            roots[1] = new CartesianComplexDouble(- sqrtAbs, 0);
+            roots[0] = ComplexNumbers.ofCartesianForm(sqrtAbs, 0);
+            roots[1] = ComplexNumbers.ofCartesianForm(- sqrtAbs, 0);
         }
         
         return roots;
     }
     
-    public static Complex cbrt(double value, int k) {
-        return ComplexNumbers.root(value, 3, k);
+    public static Complex complexCbrt(double value, int k) {
+        return ComplexNumbers.complexRoot(value, 3, k);
     }
     
-    public static Complex[] allCbrts(double value, int k) {
-        return ComplexNumbers.allRoots(value, 3);
+    public static Complex[] allComplexCbrts(double value, int k) {
+        return ComplexNumbers.allComplexRoots(value, 3);
     }
     
-    public static Complex root(double value, int rootIndex, int k) {
-        return new PolarComplexDouble(value).root(rootIndex, k);
+    public static Complex complexRoot(double value, int rootIndex, int k) {
+        return ComplexNumbers.ofPolarForm(value).root(rootIndex, k);
     }
     
-    public static Complex[] allRoots(double value, int rootIndex) {
-        return new PolarComplexDouble(value).allRoots(rootIndex);
+    public static Complex[] allComplexRoots(double value, int rootIndex) {
+        return ComplexNumbers.ofPolarForm(value).allRoots(rootIndex);
     }
     
     // -------------------------------------------------------------------------
     
     /**
      * Solves a linear equation of the form {@code a*x + b = 0},
-     * where the coefficients are {@link Complex} numbers, and returns the root.
+     * where the coefficients are {@link Complex} numbers, and returns the complexRoot.
      *
      * @param a The complex coefficient of {@code x^1} (must not be zero).
      * @param b The complex coefficient of {@code x^0} (known term).
-     * @return The root of the linear equation.
+     * @return The complexRoot of the linear equation.
      * @throws IllegalArgumentException if {@code a} is zero.
      */
     public static Complex solveLinearEquation(Complex a, Complex b) {
@@ -398,14 +515,15 @@ public class ComplexNumbers {
         if (a == 0) {
             throw new IllegalArgumentException("Coeff of x^2 cannot be zero.");
         }
+        
         if ((b == 0) && (c == 0)) {
             // a(x^2) = 0
             return ComplexNumbers.findRootsWithOnlyA();
         }
         
-        Complex complexA = new CartesianComplexDouble(a);
-        Complex complexB = new CartesianComplexDouble(b);
-        Complex complexC = new CartesianComplexDouble(c);
+        Complex complexA = ComplexNumbers.of(a);
+        Complex complexB = ComplexNumbers.of(b);
+        Complex complexC = ComplexNumbers.of(c);
         
         if (b == 0) {
             // a(x^2) + c = 0;
@@ -441,11 +559,11 @@ public class ComplexNumbers {
         if (a.isZero()) {
             throw new IllegalArgumentException("Coeff of x^2 cannot be zero.");
         }
+        
         if (b.isZero() && c.isZero()) {
             // a(x^2) = 0
             return ComplexNumbers.findRootsWithOnlyA();
         }
-        
         if (b.isZero()) {
             // a(x^2) + c = 0;
             return ComplexNumbers.findRootsWithOnlyAC(a, c);
@@ -472,7 +590,7 @@ public class ComplexNumbers {
     private static Complex sqrtOfDelta(double a, double b, double c) {
         double delta = (b * b) - 4 * a * c;
         // Complex[] sqrt(delta) = {+z , -z}
-        return ComplexNumbers.sqrtOf(delta, POSITIVE_COMPLEX_SQRT);
+        return ComplexNumbers.complexSqrtOf(delta, POSITIVE_COMPLEX_SQRT);
     }
 
     private static Complex[] findRootsWithOnlyA() {
@@ -485,7 +603,7 @@ public class ComplexNumbers {
     private static Complex[] findRootsWithOnlyAC(Complex a, Complex c) {
         // a(x^2) + c = 0  -> x1 = x2 = +- sqrt(-c/a)
         Complex x1 = c.negative().divideBy(a).sqrt(POSITIVE_COMPLEX_SQRT);
-//        Complex x2 = c.negative().divideFor(a).sqrt(NEGATIVE_COMPLEX_SQRT);
+        // Complex x2 = c.negative().divideFor(a).sqrt(NEGATIVE_COMPLEX_SQRT);
         Complex x2 = x1.negative();
         return new Complex[] {x1, x2};
     }
@@ -508,7 +626,7 @@ public class ComplexNumbers {
             return new Complex[] {x1, x2};
         }
         
-        Complex sgnB = new CartesianComplexDouble(Math.signum(b.realValue()), Math.signum(b.imaginaryValue())); 
+        Complex sgnB = ComplexNumbers.ofCartesianForm(Math.signum(b.realValue()), Math.signum(b.imaginaryValue())); 
         Complex expression = b.negative().minus(sqrtOfDelta.multiplyBy(sgnB));    // -b - sgn(b)*sqrt(delta)
         // x1 = (-b - sgn(b)*sqrt(delta)) /(2*a)  -> Alternative formula: avoid catastrophic cancellation
         x1 = expression.divideBy(a.multiplyByReal(2));

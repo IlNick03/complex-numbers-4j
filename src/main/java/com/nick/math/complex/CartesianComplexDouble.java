@@ -5,7 +5,7 @@ import static com.nick.math.complex.ComplexNumbers.ZERO_COMPLEX_CARTESIAN;
 import static java.lang.Math.PI;
 
 /**
- * A complex number in its cartesian form: {@code z = a + i*b}, where:
+ * A Complex number in its cartesian form: {@code z = a + i*b}, where:
  * <ul>
  *   <li> {@code a} = real part
    <li> {@code a} = imaginary part
@@ -19,6 +19,12 @@ class CartesianComplexDouble extends AbstractComplexDouble {
     
     private final double real;
     private final double imaginary;
+    
+    
+    public CartesianComplexDouble(Complex complex) {
+        this.real = complex.realValue();
+        this.imaginary = complex.imaginaryValue();
+    }
 
     public CartesianComplexDouble(double real) {
         this.real = real;
@@ -81,6 +87,7 @@ class CartesianComplexDouble extends AbstractComplexDouble {
         return (this.real == 0) && (this.imaginary == 0);
     }
     
+    @Override
     public boolean isZero(double eps) {
         return (FloatingPoint.approxZero(this.real, eps)) 
                 && (FloatingPoint.approxZero(this.imaginary, eps));
@@ -270,6 +277,22 @@ class CartesianComplexDouble extends AbstractComplexDouble {
         double realDifference = Math.abs(this.real - complex.realValue());
         double imaginaryDifference = Math.abs(this.imaginary - complex.imaginaryValue());
         return ((realDifference < epsilon) && (imaginaryDifference < epsilon));
+    }
+
+    @Override
+    public boolean deepEquals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        
+        if (o.getClass() == this.getClass()) {
+            CartesianComplexDouble cartesianComplex = (CartesianComplexDouble) o;
+            return ((this.real == cartesianComplex.real) && (this.imaginary == cartesianComplex.imaginary));
+        }
+        return false;
     }
     
     @Override

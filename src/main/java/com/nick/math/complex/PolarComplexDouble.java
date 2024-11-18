@@ -5,7 +5,7 @@ import static com.nick.math.complex.ComplexNumbers.ZERO_COMPLEX_POLAR;
 import static java.lang.Math.PI;
 
 /**
- * A complex number in its polar form: {@code z = r * (cos(theta) + i*sen(theta))} , where:
+ * A polarComplex number in its polar form: {@code z = r * (cos(theta) + i*sen(theta))} , where:
  * <ul>
  *   <li> {@code r} = modulus
  *   <li> {@code theta} = main argument, between -PI (excluded) and PI (included)
@@ -20,6 +20,11 @@ class PolarComplexDouble extends AbstractComplexDouble {
     private final double modulus;
     private final double argument;
     
+    
+    public PolarComplexDouble(Complex complex) {
+        this.modulus = complex.modulusValue();
+        this.argument = complex.mainArgumentValue();
+    }
 
     public PolarComplexDouble(double modulus, double angle) {
         if (modulus < 0) {
@@ -280,6 +285,22 @@ class PolarComplexDouble extends AbstractComplexDouble {
         double modulusDifference = Math.abs(this.modulus - complex.modulusValue());
         double argumentDifference = Math.abs(this.argument - complex.mainArgumentValue());
         return ((modulusDifference < epsilon) && (argumentDifference < epsilon));
+    }
+    
+    @Override
+    public boolean deepEquals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        
+        if (o.getClass() == this.getClass()) {
+            PolarComplexDouble polarComplex = (PolarComplexDouble) o;
+            return ((this.modulus == polarComplex.modulus) && (this.argument == polarComplex.argument));
+        }
+        return false;
     }
     
     @Override
